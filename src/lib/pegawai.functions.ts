@@ -5,13 +5,12 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const USERNAME_DOMAIN = "sipasti.local";
 const usernameEmail = (u: string) => `${u.trim().toLowerCase()}@${USERNAME_DOMAIN}`;
 
-async function assertAdmin(context: {
-  supabase: Awaited<ReturnType<typeof requireSupabaseAuth extends never ? never : never>>;
-  userId: string;
-}) {
-  const { data, error } = await (context.supabase as unknown as {
-    rpc: (fn: string, args: Record<string, unknown>) => Promise<{ data: boolean | null; error: unknown }>;
-  }).rpc("has_role", { _user_id: context.userId, _role: "admin" });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function assertAdmin(context: { supabase: any; userId: string }) {
+  const { data, error } = await context.supabase.rpc("has_role", {
+    _user_id: context.userId,
+    _role: "admin",
+  });
   if (error || !data) throw new Error("Akses ditolak: hanya administrator.");
 }
 
