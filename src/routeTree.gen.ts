@@ -13,6 +13,9 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRiwayatRouteImport } from './routes/_authenticated/riwayat'
+import { Route as AuthenticatedPengaturanRouteImport } from './routes/_authenticated/pengaturan'
+import { Route as AuthenticatedPegawaiRouteImport } from './routes/_authenticated/pegawai'
+import { Route as AuthenticatedHariLiburRouteImport } from './routes/_authenticated/hari-libur'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAbsenRouteImport } from './routes/_authenticated/absen'
 
@@ -35,6 +38,21 @@ const AuthenticatedRiwayatRoute = AuthenticatedRiwayatRouteImport.update({
   path: '/riwayat',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPengaturanRoute = AuthenticatedPengaturanRouteImport.update({
+  id: '/pengaturan',
+  path: '/pengaturan',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPegawaiRoute = AuthenticatedPegawaiRouteImport.update({
+  id: '/pegawai',
+  path: '/pegawai',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHariLiburRoute = AuthenticatedHariLiburRouteImport.update({
+  id: '/hari-libur',
+  path: '/hari-libur',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -51,6 +69,9 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/absen': typeof AuthenticatedAbsenRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/pegawai': typeof AuthenticatedPegawaiRoute
+  '/pengaturan': typeof AuthenticatedPengaturanRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +79,9 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/absen': typeof AuthenticatedAbsenRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/pegawai': typeof AuthenticatedPegawaiRoute
+  '/pengaturan': typeof AuthenticatedPengaturanRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
 }
 export interface FileRoutesById {
@@ -67,13 +91,32 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/absen': typeof AuthenticatedAbsenRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/_authenticated/pegawai': typeof AuthenticatedPegawaiRoute
+  '/_authenticated/pengaturan': typeof AuthenticatedPengaturanRoute
   '/_authenticated/riwayat': typeof AuthenticatedRiwayatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/absen' | '/dashboard' | '/riwayat'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/absen'
+    | '/dashboard'
+    | '/hari-libur'
+    | '/pegawai'
+    | '/pengaturan'
+    | '/riwayat'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/absen' | '/dashboard' | '/riwayat'
+  to:
+    | '/'
+    | '/auth'
+    | '/absen'
+    | '/dashboard'
+    | '/hari-libur'
+    | '/pegawai'
+    | '/pengaturan'
+    | '/riwayat'
   id:
     | '__root__'
     | '/'
@@ -81,6 +124,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/absen'
     | '/_authenticated/dashboard'
+    | '/_authenticated/hari-libur'
+    | '/_authenticated/pegawai'
+    | '/_authenticated/pengaturan'
     | '/_authenticated/riwayat'
   fileRoutesById: FileRoutesById
 }
@@ -120,6 +166,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRiwayatRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/pengaturan': {
+      id: '/_authenticated/pengaturan'
+      path: '/pengaturan'
+      fullPath: '/pengaturan'
+      preLoaderRoute: typeof AuthenticatedPengaturanRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pegawai': {
+      id: '/_authenticated/pegawai'
+      path: '/pegawai'
+      fullPath: '/pegawai'
+      preLoaderRoute: typeof AuthenticatedPegawaiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hari-libur': {
+      id: '/_authenticated/hari-libur'
+      path: '/hari-libur'
+      fullPath: '/hari-libur'
+      preLoaderRoute: typeof AuthenticatedHariLiburRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -140,12 +207,18 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAbsenRoute: typeof AuthenticatedAbsenRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedHariLiburRoute: typeof AuthenticatedHariLiburRoute
+  AuthenticatedPegawaiRoute: typeof AuthenticatedPegawaiRoute
+  AuthenticatedPengaturanRoute: typeof AuthenticatedPengaturanRoute
   AuthenticatedRiwayatRoute: typeof AuthenticatedRiwayatRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAbsenRoute: AuthenticatedAbsenRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedHariLiburRoute: AuthenticatedHariLiburRoute,
+  AuthenticatedPegawaiRoute: AuthenticatedPegawaiRoute,
+  AuthenticatedPengaturanRoute: AuthenticatedPengaturanRoute,
   AuthenticatedRiwayatRoute: AuthenticatedRiwayatRoute,
 }
 
