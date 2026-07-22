@@ -9,38 +9,149 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRiwayatRouteImport } from './routes/_authenticated/riwayat'
+import { Route as AuthenticatedPengaturanRouteImport } from './routes/_authenticated/pengaturan'
+import { Route as AuthenticatedPegawaiRouteImport } from './routes/_authenticated/pegawai'
+import { Route as AuthenticatedHariLiburRouteImport } from './routes/_authenticated/hari-libur'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedAbsenRouteImport } from './routes/_authenticated/absen'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRiwayatRoute = AuthenticatedRiwayatRouteImport.update({
+  id: '/riwayat',
+  path: '/riwayat',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPengaturanRoute = AuthenticatedPengaturanRouteImport.update({
+  id: '/pengaturan',
+  path: '/pengaturan',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPegawaiRoute = AuthenticatedPegawaiRouteImport.update({
+  id: '/pegawai',
+  path: '/pegawai',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHariLiburRoute = AuthenticatedHariLiburRouteImport.update({
+  id: '/hari-libur',
+  path: '/hari-libur',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAbsenRoute = AuthenticatedAbsenRouteImport.update({
+  id: '/absen',
+  path: '/absen',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/absen': typeof AuthenticatedAbsenRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/pegawai': typeof AuthenticatedPegawaiRoute
+  '/pengaturan': typeof AuthenticatedPengaturanRoute
+  '/riwayat': typeof AuthenticatedRiwayatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/absen': typeof AuthenticatedAbsenRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/pegawai': typeof AuthenticatedPegawaiRoute
+  '/pengaturan': typeof AuthenticatedPengaturanRoute
+  '/riwayat': typeof AuthenticatedRiwayatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/absen': typeof AuthenticatedAbsenRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/_authenticated/pegawai': typeof AuthenticatedPegawaiRoute
+  '/_authenticated/pengaturan': typeof AuthenticatedPengaturanRoute
+  '/_authenticated/riwayat': typeof AuthenticatedRiwayatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/absen'
+    | '/dashboard'
+    | '/hari-libur'
+    | '/pegawai'
+    | '/pengaturan'
+    | '/riwayat'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/absen'
+    | '/dashboard'
+    | '/hari-libur'
+    | '/pegawai'
+    | '/pengaturan'
+    | '/riwayat'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/absen'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/hari-libur'
+    | '/_authenticated/pegawai'
+    | '/_authenticated/pengaturan'
+    | '/_authenticated/riwayat'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +159,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/riwayat': {
+      id: '/_authenticated/riwayat'
+      path: '/riwayat'
+      fullPath: '/riwayat'
+      preLoaderRoute: typeof AuthenticatedRiwayatRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pengaturan': {
+      id: '/_authenticated/pengaturan'
+      path: '/pengaturan'
+      fullPath: '/pengaturan'
+      preLoaderRoute: typeof AuthenticatedPengaturanRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pegawai': {
+      id: '/_authenticated/pegawai'
+      path: '/pegawai'
+      fullPath: '/pegawai'
+      preLoaderRoute: typeof AuthenticatedPegawaiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hari-libur': {
+      id: '/_authenticated/hari-libur'
+      path: '/hari-libur'
+      fullPath: '/hari-libur'
+      preLoaderRoute: typeof AuthenticatedHariLiburRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/absen': {
+      id: '/_authenticated/absen'
+      path: '/absen'
+      fullPath: '/absen'
+      preLoaderRoute: typeof AuthenticatedAbsenRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAbsenRoute: typeof AuthenticatedAbsenRoute
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedHariLiburRoute: typeof AuthenticatedHariLiburRoute
+  AuthenticatedPegawaiRoute: typeof AuthenticatedPegawaiRoute
+  AuthenticatedPengaturanRoute: typeof AuthenticatedPengaturanRoute
+  AuthenticatedRiwayatRoute: typeof AuthenticatedRiwayatRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAbsenRoute: AuthenticatedAbsenRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedHariLiburRoute: AuthenticatedHariLiburRoute,
+  AuthenticatedPegawaiRoute: AuthenticatedPegawaiRoute,
+  AuthenticatedPengaturanRoute: AuthenticatedPengaturanRoute,
+  AuthenticatedRiwayatRoute: AuthenticatedRiwayatRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
