@@ -65,8 +65,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile top bar */}
       <header className="lg:hidden sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card/95 backdrop-blur px-4 py-3">
         <div className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <Leaf className="h-5 w-5" />
+          <div className="grid h-9 w-9 place-items-center overflow-hidden rounded-lg bg-white ring-1 ring-border">
+            <img src={logoAsset.url} alt="Logo UPT Puskesmas Pasar Sabtu" className="h-8 w-8 object-contain" />
           </div>
           <div>
             <div className="text-sm font-bold leading-tight">SIPASTI</div>
