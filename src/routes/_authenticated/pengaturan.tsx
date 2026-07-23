@@ -141,12 +141,12 @@ function PengaturanPage() {
                 <Crosshair className="h-3.5 w-3.5" /> Gunakan lokasi saat ini
               </button>
               <a
-                href={`https://www.openstreetmap.org/?mlat=${f.office_lat}&mlon=${f.office_lng}#map=18/${f.office_lat}/${f.office_lng}`}
+                href={`https://www.google.com/maps/search/?api=1&query=${f.office_lat},${f.office_lng}`}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted"
               >
-                <ExternalLink className="h-3.5 w-3.5" /> Lihat di Peta
+                <ExternalLink className="h-3.5 w-3.5" /> Lihat di Google Maps
               </a>
             </div>
           </div>
@@ -178,7 +178,7 @@ function PengaturanPage() {
               </select>
             </div>
           </div>
-          <ClientMap lat={f.office_lat} lng={f.office_lng} radius={f.radius_meter} />
+          <GoogleMapEmbed lat={f.office_lat} lng={f.office_lng} radius={f.radius_meter} />
         </div>
 
         <div className="lg:col-span-2 flex justify-end">
@@ -249,58 +249,26 @@ function NumberField({
   );
 }
 
-function ClientMap({ lat, lng, radius }: { lat: number; lng: number; radius: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<unknown>(null);
-  const markerRef = useRef<unknown>(null);
-  const circleRef = useRef<unknown>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      if (typeof window === "undefined") return;
-      const L = (await import("leaflet")).default;
-      if (cancelled || !ref.current) return;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const map = (L.map as any)(ref.current).setView([lat, lng], 16);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "&copy; OpenStreetMap contributors",
-        maxZoom: 19,
-      }).addTo(map);
-      markerRef.current = L.marker([lat, lng]).addTo(map);
-      circleRef.current = L.circle([lat, lng], {
-        radius,
-        color: "#16a34a",
-        fillColor: "#16a34a",
-        fillOpacity: 0.15,
-      }).addTo(map);
-      mapRef.current = map;
-    })();
-    return () => {
-      cancelled = true;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const m = mapRef.current as any;
-      if (m) m.remove();
-      mapRef.current = null;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const m = mapRef.current as any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const marker = markerRef.current as any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const circle = circleRef.current as any;
-    if (!m || !marker || !circle) return;
-    marker.setLatLng([lat, lng]);
-    circle.setLatLng([lat, lng]);
-    circle.setRadius(radius);
-    m.setView([lat, lng]);
-  }, [lat, lng, radius]);
-
+function GoogleMapEmbed({ lat, lng, radius }: { lat: number; lng: number; radius: number }) {
+  // Zoom heuristic based on radius (meters)
+  const zoom = radius <= 75 ? 18 : radius <= 150 ? 17 : radius <= 300 ? 16 : 15;
+  const src = `https://maps.google.com/maps?q=${lat},${lng}&z=${zoom}&output=embed`;
   return (
-    <div className="h-72 w-full overflow-hidden rounded-xl border border-border" ref={ref} />
+    <div className="space-y-2">
+      <div className="relative h-72 w-full overflow-hidden rounded-xl border border-border">
+        <iframe
+          key={`${lat},${lng},${zoom}`}
+          title="Lokasi Kantor"
+          src={src}
+          className="h-full w-full"
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
+      <p className="text-xs text-muted-foreground">
+        Peta menggunakan Google Maps. Marker menunjukkan koordinat kantor; radius absensi{" "}
+        <b>{radius} m</b> divalidasi otomatis saat pegawai melakukan absen.
+      </p>
+    </div>
   );
 }
