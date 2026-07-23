@@ -3,7 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { format, parseISO } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
-import { Search } from "lucide-react";
+import { Search, FileSpreadsheet, FileText } from "lucide-react";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
@@ -74,13 +77,84 @@ function RiwayatPage() {
     });
   }, [rows, q]);
 
+  const periodLabel = format(new Date(tahun, bulan - 1, 1), "MMMM yyyy", { locale: idLocale });
+
+  function buildExportRows() {
+    return filtered.map((r, i) => {
+      const p = (r as unknown as { profiles?: { nama?: string; nip?: string } }).profiles;
+      const s = statusLabel(r.status);
+      return {
+        No: i + 1,
+        Nama: p?.nama ?? "",
+        NIP: p?.nip ?? "",
+        Tanggal: format(parseISO(r.tanggal), "dd/MM/yyyy"),
+        Jam: format(parseISO(r.jam), "HH:mm:ss"),
+        Status: s.label,
+        "Jarak (m)": r.jarak_meter != null ? Math.round(r.jarak_meter) : "",
+        Latitude: r.latitude ?? "",
+        Longitude: r.longitude ?? "",
+        Keterangan: r.keterangan ?? "",
+      };
+    });
+  }
+
+  function exportExcel() {
+    const data = buildExportRows();
+    if (data.length === 0) return;
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Riwayat");
+    XLSX.writeFile(wb, `Rekap-Absensi-${periodLabel.replace(" ", "-")}.xlsx`);
+  }
+
+  function exportPDF() {
+    const data = buildExportRows();
+    if (data.length === 0) return;
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+    doc.setFontSize(14);
+    doc.text("Rekap Absensi Apel Pegawai", 14, 15);
+    doc.setFontSize(10);
+    doc.text("UPT Puskesmas Pasar Sabtu", 14, 21);
+    doc.text(`Periode: ${periodLabel}`, 14, 27);
+    const headers = Object.keys(data[0]);
+    autoTable(doc, {
+      startY: 32,
+      head: [headers],
+      body: data.map((r) => headers.map((h) => String((r as Record<string, unknown>)[h] ?? ""))),
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [34, 139, 84], textColor: 255 },
+      alternateRowStyles: { fillColor: [240, 249, 240] },
+    });
+    doc.save(`Rekap-Absensi-${periodLabel.replace(" ", "-")}.pdf`);
+  }
+
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-extrabold text-foreground">Riwayat Absensi</h1>
-        <p className="text-sm text-muted-foreground">
-          {isAdmin ? "Seluruh riwayat pegawai." : "Riwayat absensi Anda."}
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-extrabold text-foreground">Riwayat Absensi</h1>
+          <p className="text-sm text-muted-foreground">
+            {isAdmin ? "Seluruh riwayat pegawai." : "Riwayat absensi Anda."}
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={exportExcel}
+            disabled={filtered.length === 0}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-foreground shadow-sm hover:bg-muted disabled:opacity-50"
+          >
+            <FileSpreadsheet className="h-4 w-4 text-emerald-600" />
+            Excel
+          </button>
+          <button
+            onClick={exportPDF}
+            disabled={filtered.length === 0}
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground shadow-sm hover:opacity-90 disabled:opacity-50"
+          >
+            <FileText className="h-4 w-4" />
+            PDF
+          </button>
+        </div>
       </div>
 
       <div className="rounded-2xl bg-card p-4 shadow-[var(--shadow-soft)] border border-border/50">

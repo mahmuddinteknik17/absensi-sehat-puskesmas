@@ -1,7 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 import {
-  Leaf,
   LayoutDashboard,
   MapPin,
   History,
@@ -16,6 +15,7 @@ import {
 
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import logoAsset from "@/assets/logo-puskesmas.png.asset.json";
 
 type NavItem = {
   to: string;
@@ -65,8 +65,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       {/* Mobile top bar */}
       <header className="lg:hidden sticky top-0 z-30 flex items-center justify-between border-b border-border/60 bg-card/95 backdrop-blur px-4 py-3">
         <div className="flex items-center gap-2">
-          <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <Leaf className="h-5 w-5" />
+          <div className="grid h-9 w-9 place-items-center overflow-hidden rounded-lg bg-white ring-1 ring-border">
+            <img src={logoAsset.url} alt="Logo UPT Puskesmas Pasar Sabtu" className="h-8 w-8 object-contain" />
           </div>
           <div>
             <div className="text-sm font-bold leading-tight">SIPASTI</div>
@@ -94,8 +94,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="absolute right-0 top-0 bottom-0 w-72 bg-sidebar shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-border/60">
               <div className="flex items-center gap-2">
-                <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-                  <Leaf className="h-5 w-5" />
+                <div className="grid h-9 w-9 place-items-center overflow-hidden rounded-lg bg-white ring-1 ring-border">
+                  <img src={logoAsset.url} alt="Logo" className="h-8 w-8 object-contain" />
                 </div>
                 <div className="text-sm font-bold">SIPASTI</div>
               </div>
@@ -137,11 +137,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 function SidebarBrand() {
   return (
     <div className="flex items-center gap-3 p-5 border-b border-sidebar-border/60">
-      <div
-        className="grid h-10 w-10 place-items-center rounded-xl text-primary-foreground shadow-[var(--shadow-soft)]"
-        style={{ background: "var(--gradient-primary)" }}
-      >
-        <Leaf className="h-5 w-5" />
+      <div className="grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-white shadow-[var(--shadow-soft)] ring-1 ring-border">
+        <img src={logoAsset.url} alt="Logo UPT Puskesmas Pasar Sabtu" className="h-10 w-10 object-contain" />
       </div>
       <div>
         <div className="text-sm font-extrabold text-foreground leading-tight">SIPASTI</div>
