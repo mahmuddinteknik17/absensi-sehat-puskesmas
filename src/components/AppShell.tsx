@@ -1,7 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { type ReactNode, useEffect, useState } from "react";
 import {
-  Leaf,
   LayoutDashboard,
   MapPin,
   History,
@@ -16,6 +15,7 @@ import {
 
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import logoAsset from "@/assets/logo-puskesmas.png.asset.json";
 
 type NavItem = {
   to: string;
