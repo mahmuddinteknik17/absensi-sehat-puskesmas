@@ -21,11 +21,12 @@ export const Route = createFileRoute("/_authenticated/pengaturan")({
 function PengaturanPage() {
   const user = useCurrentUser();
   const qc = useQueryClient();
-  if (user.loading) return null;
-  if (user.role !== "admin") throw redirect({ to: "/dashboard" });
+
+  const isAdmin = !user.loading && user.role === "admin";
 
   const { data: s } = useQuery({
     queryKey: ["settings"],
+    enabled: isAdmin,
     queryFn: async () => {
       const { data, error } = await supabase.from("settings").select("*").eq("id", 1).single();
       if (error) throw error;
@@ -69,6 +70,9 @@ function PengaturanPage() {
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Gagal"),
   });
+
+  if (user.loading) return null;
+  if (user.role !== "admin") throw redirect({ to: "/dashboard" });
 
   async function pickCurrent() {
     try {

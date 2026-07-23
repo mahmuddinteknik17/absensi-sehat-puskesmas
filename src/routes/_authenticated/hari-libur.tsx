@@ -24,11 +24,11 @@ function HariLiburPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
 
-  if (user.loading) return null;
-  if (user.role !== "admin") throw redirect({ to: "/dashboard" });
+  const isAdmin = !user.loading && user.role === "admin";
 
   const { data: rows } = useQuery({
     queryKey: ["holidays"],
+    enabled: isAdmin,
     queryFn: async () => {
       const { data, error } = await supabase.from("holidays").select("*").order("tanggal");
       if (error) throw error;
@@ -47,6 +47,9 @@ function HariLiburPage() {
     },
     onError: (e) => toast.error(e instanceof Error ? e.message : "Gagal"),
   });
+
+  if (user.loading) return null;
+  if (user.role !== "admin") throw redirect({ to: "/dashboard" });
 
   return (
     <div className="space-y-5">
