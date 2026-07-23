@@ -137,11 +137,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 function SidebarBrand() {
   return (
     <div className="flex items-center gap-3 p-5 border-b border-sidebar-border/60">
-      <div
-        className="grid h-10 w-10 place-items-center rounded-xl text-primary-foreground shadow-[var(--shadow-soft)]"
-        style={{ background: "var(--gradient-primary)" }}
-      >
-        <Leaf className="h-5 w-5" />
+      <div className="grid h-11 w-11 place-items-center overflow-hidden rounded-xl bg-white shadow-[var(--shadow-soft)] ring-1 ring-border">
+        <img src={logoAsset.url} alt="Logo UPT Puskesmas Pasar Sabtu" className="h-10 w-10 object-contain" />
       </div>
       <div>
         <div className="text-sm font-extrabold text-foreground leading-tight">SIPASTI</div>
