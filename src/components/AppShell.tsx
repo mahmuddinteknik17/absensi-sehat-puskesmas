@@ -94,8 +94,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="absolute right-0 top-0 bottom-0 w-72 bg-sidebar shadow-2xl flex flex-col">
             <div className="flex items-center justify-between p-4 border-b border-border/60">
               <div className="flex items-center gap-2">
-                <div className="grid h-9 w-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-                  <Leaf className="h-5 w-5" />
+                <div className="grid h-9 w-9 place-items-center overflow-hidden rounded-lg bg-white ring-1 ring-border">
+                  <img src={logoAsset.url} alt="Logo" className="h-8 w-8 object-contain" />
                 </div>
                 <div className="text-sm font-bold">SIPASTI</div>
               </div>
