@@ -41,6 +41,8 @@ function AbsenPage() {
   const [locErr, setLocErr] = useState<string | null>(null);
   const [now, setNow] = useState(new Date());
   const [busy, setBusy] = useState(false);
+  const [outReason, setOutReason] = useState<OutReason>("tugas_luar");
+  const [keterangan, setKeterangan] = useState("");
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
