@@ -51,7 +51,7 @@ function RiwayatPage() {
     queryFn: async () => {
       let query = supabase
         .from("attendance")
-        .select("*, profiles!inner(nama, nip)")
+        .select("*")
         .gte("tanggal", from)
         .lte("tanggal", to)
         .order("tanggal", { ascending: false })
@@ -60,7 +60,17 @@ function RiwayatPage() {
       else if (pegawaiId !== "all") query = query.eq("user_id", pegawaiId);
       const { data, error } = await query;
       if (error) throw error;
-      return data ?? [];
+      const list = data ?? [];
+      const userIds = Array.from(new Set(list.map((r) => r.user_id)));
+      let profMap = new Map<string, { nama: string; nip: string }>();
+      if (userIds.length > 0) {
+        const { data: profs } = await supabase
+          .from("profiles")
+          .select("id, nama, nip")
+          .in("id", userIds);
+        profMap = new Map((profs ?? []).map((p) => [p.id, { nama: p.nama, nip: p.nip }]));
+      }
+      return list.map((r) => ({ ...r, profiles: profMap.get(r.user_id) ?? null }));
     },
   });
 
@@ -68,7 +78,7 @@ function RiwayatPage() {
     if (!q) return rows ?? [];
     const s = q.toLowerCase();
     return (rows ?? []).filter((r) => {
-      const p = (r as unknown as { profiles?: { nama?: string; nip?: string } }).profiles;
+      const p = (r as unknown as { profiles?: { nama?: string; nip?: string } | null }).profiles;
       return (
         p?.nama?.toLowerCase().includes(s) ||
         p?.nip?.toLowerCase().includes(s) ||
