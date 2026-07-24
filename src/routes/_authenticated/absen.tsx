@@ -25,6 +25,12 @@ export const Route = createFileRoute("/_authenticated/absen")({
 });
 
 type Pos = { lat: number; lng: number; acc: number } | null;
+type OutReason = "tugas_luar" | "sakit" | "izin";
+const REASON_OPTIONS: { value: OutReason; label: string }[] = [
+  { value: "tugas_luar", label: "Tugas Luar" },
+  { value: "sakit", label: "Sakit" },
+  { value: "izin", label: "Izin" },
+];
 
 function AbsenPage() {
   const user = useCurrentUser();
@@ -35,6 +41,8 @@ function AbsenPage() {
   const [locErr, setLocErr] = useState<string | null>(null);
   const [now, setNow] = useState(new Date());
   const [busy, setBusy] = useState(false);
+  const [outReason, setOutReason] = useState<OutReason>("tugas_luar");
+  const [keterangan, setKeterangan] = useState("");
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 1000);
@@ -116,13 +124,27 @@ function AbsenPage() {
   else if (!jamBukaOK) blockReason = "Absensi belum dibuka.";
   else if (!jamTutupOK) blockReason = "Absensi telah ditutup.";
   else if (!pos) blockReason = "Menunggu lokasi GPS…";
-  else if (!inRange) blockReason = "Anda berada di luar area absensi.";
 
   async function submit() {
     if (!pos || !settings || !user.id) return;
     setBusy(true);
     try {
-      const status = isLate ? "terlambat" : "hadir";
+      let status: "hadir" | "terlambat" | "izin" | "sakit";
+      let ket: string | null = keterangan.trim() || null;
+      if (!inRange) {
+        if (outReason === "sakit") {
+          status = "sakit";
+          ket = ket ? `Sakit — ${ket}` : "Sakit";
+        } else if (outReason === "izin") {
+          status = "izin";
+          ket = ket ? `Izin — ${ket}` : "Izin";
+        } else {
+          status = isLate ? "terlambat" : "hadir";
+          ket = ket ? `Tugas Luar — ${ket}` : "Tugas Luar";
+        }
+      } else {
+        status = isLate ? "terlambat" : "hadir";
+      }
       const { error } = await supabase.from("attendance").insert({
         user_id: user.id,
         tanggal: today,
@@ -133,9 +155,18 @@ function AbsenPage() {
         akurasi: pos.acc,
         jarak_meter: distance ?? null,
         perangkat: deviceName(),
+        keterangan: ket,
       });
       if (error) throw error;
-      toast.success(status === "hadir" ? "✅ Absensi berhasil" : "🟡 Absensi tercatat (Terlambat)");
+      const msg =
+        status === "hadir"
+          ? "✅ Absensi berhasil"
+          : status === "terlambat"
+            ? "🟡 Absensi tercatat (Terlambat)"
+            : status === "sakit"
+              ? "🩺 Absensi tercatat (Sakit)"
+              : "📝 Absensi tercatat (Izin)";
+      toast.success(msg);
       qc.invalidateQueries();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Gagal absen");
@@ -237,6 +268,43 @@ function AbsenPage() {
             )}
           </div>
 
+          {!inRange && !blockReason && !alreadyAbsen && pos && (
+            <div className="mt-4 rounded-xl border border-border/60 bg-muted/30 p-4">
+              <div className="text-sm font-semibold text-foreground">
+                Alasan berada di luar lokasi
+              </div>
+              <div className="mt-3 grid gap-2">
+                {REASON_OPTIONS.map((opt) => (
+                  <label
+                    key={opt.value}
+                    className={`flex cursor-pointer items-center gap-3 rounded-lg border px-3 py-2 text-sm transition-colors ${
+                      outReason === opt.value
+                        ? "border-primary bg-primary/5 text-foreground"
+                        : "border-border hover:bg-muted/50"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="outReason"
+                      value={opt.value}
+                      checked={outReason === opt.value}
+                      onChange={() => setOutReason(opt.value)}
+                      className="h-4 w-4 accent-primary"
+                    />
+                    <span className="font-medium">{opt.label}</span>
+                  </label>
+                ))}
+              </div>
+              <textarea
+                value={keterangan}
+                onChange={(e) => setKeterangan(e.target.value)}
+                placeholder="Keterangan tambahan (opsional)…"
+                rows={2}
+                className="mt-3 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+          )}
+
           <div className="mt-auto pt-5">
             {today_att && (
               <div className="mb-3 rounded-lg bg-muted/60 p-3 text-sm">
@@ -257,7 +325,12 @@ function AbsenPage() {
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3.5 text-sm font-bold text-primary-foreground shadow-[var(--shadow-soft)] transition-all hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
-              {blockReason ?? (isLate ? "Absen Sekarang (Terlambat)" : "Absen Sekarang")}
+              {blockReason ??
+                (!inRange
+                  ? `Absen Sekarang (${REASON_OPTIONS.find((o) => o.value === outReason)?.label})`
+                  : isLate
+                    ? "Absen Sekarang (Terlambat)"
+                    : "Absen Sekarang")}
             </button>
             {blockReason && (
               <div className="mt-2 text-center text-xs text-muted-foreground">{blockReason}</div>
