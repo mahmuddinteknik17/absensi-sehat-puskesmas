@@ -124,13 +124,27 @@ function AbsenPage() {
   else if (!jamBukaOK) blockReason = "Absensi belum dibuka.";
   else if (!jamTutupOK) blockReason = "Absensi telah ditutup.";
   else if (!pos) blockReason = "Menunggu lokasi GPS…";
-  else if (!inRange) blockReason = "Anda berada di luar area absensi.";
 
   async function submit() {
     if (!pos || !settings || !user.id) return;
     setBusy(true);
     try {
-      const status = isLate ? "terlambat" : "hadir";
+      let status: "hadir" | "terlambat" | "izin" | "sakit";
+      let ket: string | null = keterangan.trim() || null;
+      if (!inRange) {
+        if (outReason === "sakit") {
+          status = "sakit";
+          ket = ket ? `Sakit — ${ket}` : "Sakit";
+        } else if (outReason === "izin") {
+          status = "izin";
+          ket = ket ? `Izin — ${ket}` : "Izin";
+        } else {
+          status = isLate ? "terlambat" : "hadir";
+          ket = ket ? `Tugas Luar — ${ket}` : "Tugas Luar";
+        }
+      } else {
+        status = isLate ? "terlambat" : "hadir";
+      }
       const { error } = await supabase.from("attendance").insert({
         user_id: user.id,
         tanggal: today,
@@ -141,9 +155,18 @@ function AbsenPage() {
         akurasi: pos.acc,
         jarak_meter: distance ?? null,
         perangkat: deviceName(),
+        keterangan: ket,
       });
       if (error) throw error;
-      toast.success(status === "hadir" ? "✅ Absensi berhasil" : "🟡 Absensi tercatat (Terlambat)");
+      const msg =
+        status === "hadir"
+          ? "✅ Absensi berhasil"
+          : status === "terlambat"
+            ? "🟡 Absensi tercatat (Terlambat)"
+            : status === "sakit"
+              ? "🩺 Absensi tercatat (Sakit)"
+              : "📝 Absensi tercatat (Izin)";
+      toast.success(msg);
       qc.invalidateQueries();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Gagal absen");
