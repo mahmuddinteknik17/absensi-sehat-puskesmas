@@ -248,7 +248,7 @@ function RiwayatPage() {
             <select
               value={bulan}
               onChange={(e) =>
-                navigate({ search: (p) => ({ ...p, bulan: Number(e.target.value) }) })
+                navigate({ search: (p: Record<string, unknown>) => ({ ...p, bulan: Number(e.target.value) }) })
               }
               className="mt-1 block rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
             >
@@ -264,7 +264,7 @@ function RiwayatPage() {
             <select
               value={tahun}
               onChange={(e) =>
-                navigate({ search: (p) => ({ ...p, tahun: Number(e.target.value) }) })
+                navigate({ search: (p: Record<string, unknown>) => ({ ...p, tahun: Number(e.target.value) }) })
               }
               className="mt-1 block rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
             >
@@ -281,7 +281,7 @@ function RiwayatPage() {
               <select
                 value={unit}
                 onChange={(e) =>
-                  navigate({ search: (p) => ({ ...p, unit: e.target.value }) })
+                  navigate({ search: (p: Record<string, unknown>) => ({ ...p, unit: e.target.value }) })
                 }
                 className="mt-1 block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-ring"
               >
