@@ -445,15 +445,15 @@ function RiwayatPage() {
                   </td>
                   {dates.map((d) => {
                     const c = getCell(p.id, d.iso, d.isHoliday);
-                    const bg = d.isHoliday ? "bg-red-500 text-white" : "";
                     return (
                       <td
                         key={d.iso}
-                        className={`border border-border/70 px-2 py-1.5 text-center whitespace-nowrap ${bg} ${
-                          !d.isHoliday ? cellTone(c.kind) : ""
+                        title={d.isHoliday ? d.holidayName ?? "Libur" : ""}
+                        className={`border border-border/70 px-2 py-1.5 text-center whitespace-nowrap ${
+                          d.isHoliday ? "bg-[#fdeaea] text-red-600 font-semibold" : cellTone(c.kind)
                         }`}
                       >
-                        {d.isHoliday && c.kind !== "hadir" && c.kind !== "terlambat" && c.kind !== "tugas_luar" ? "" : c.label}
+                        {c.label}
                       </td>
                     );
                   })}
