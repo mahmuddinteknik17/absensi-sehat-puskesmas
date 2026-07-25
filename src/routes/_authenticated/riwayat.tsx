@@ -164,21 +164,28 @@ function RiwayatPage() {
         const d = i + 1;
         const iso = `${tahun}-${String(bulan).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
         const dt = new Date(tahun, bulan - 1, d);
-        const dow = dt.getDay(); // 0 sun 6 sat
-        const isWeekend = dow === 0;
+        const dow = dt.getDay(); // 0 sun .. 6 sat
         const holidayName = holidayMap.get(iso);
-        return { iso, d, header: `${String(d).padStart(2, "0")}/${String(bulan).padStart(2, "0")}`, isHoliday: !!holidayName || isWeekend, holidayName: holidayName ?? (isWeekend ? "Minggu" : undefined) };
-      }),
+        return {
+          iso,
+          d,
+          dow,
+          header: `${String(d).padStart(2, "0")}/${String(bulan).padStart(2, "0")}`,
+          isHoliday: !!holidayName,
+          holidayName,
+        };
+      }).filter((x) => x.dow >= 1 && x.dow <= 4), // hanya Senin–Kamis
     [daysInMonth, tahun, bulan, holidayMap],
   );
 
   function getCell(userId: string, iso: string, isHoliday: boolean): Cell {
+    if (isHoliday) return { label: "L", kind: "libur" };
     const a = attMap.get(`${userId}|${iso}`);
     if (a) return cellFromAttendance(a);
-    if (isHoliday) return { label: "Libur", kind: "libur" };
     if (iso <= today) return { label: "Alpha", kind: "alpha" };
     return { label: "", kind: "empty" };
   }
+
 
   function statusCode(c: Cell, isHoliday: boolean): string {
     if (isHoliday && c.kind !== "hadir" && c.kind !== "terlambat" && c.kind !== "tugas_luar") return "L";
