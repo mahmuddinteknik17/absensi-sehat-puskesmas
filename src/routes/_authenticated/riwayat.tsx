@@ -164,24 +164,31 @@ function RiwayatPage() {
         const d = i + 1;
         const iso = `${tahun}-${String(bulan).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
         const dt = new Date(tahun, bulan - 1, d);
-        const dow = dt.getDay(); // 0 sun 6 sat
-        const isWeekend = dow === 0;
+        const dow = dt.getDay(); // 0 sun .. 6 sat
         const holidayName = holidayMap.get(iso);
-        return { iso, d, header: `${String(d).padStart(2, "0")}/${String(bulan).padStart(2, "0")}`, isHoliday: !!holidayName || isWeekend, holidayName: holidayName ?? (isWeekend ? "Minggu" : undefined) };
-      }),
+        return {
+          iso,
+          d,
+          dow,
+          header: `${String(d).padStart(2, "0")}/${String(bulan).padStart(2, "0")}`,
+          isHoliday: !!holidayName,
+          holidayName,
+        };
+      }).filter((x) => x.dow >= 1 && x.dow <= 4), // hanya Senin–Kamis
     [daysInMonth, tahun, bulan, holidayMap],
   );
 
   function getCell(userId: string, iso: string, isHoliday: boolean): Cell {
+    if (isHoliday) return { label: "L", kind: "libur" };
     const a = attMap.get(`${userId}|${iso}`);
     if (a) return cellFromAttendance(a);
-    if (isHoliday) return { label: "Libur", kind: "libur" };
     if (iso <= today) return { label: "Alpha", kind: "alpha" };
     return { label: "", kind: "empty" };
   }
 
+
   function statusCode(c: Cell, isHoliday: boolean): string {
-    if (isHoliday && c.kind !== "hadir" && c.kind !== "terlambat" && c.kind !== "tugas_luar") return "L";
+    if (isHoliday) return "L";
     switch (c.kind) {
       case "hadir": return "H";
       case "terlambat": return "T";
@@ -412,7 +419,7 @@ function RiwayatPage() {
                     key={d.iso}
                     title={d.holidayName ?? ""}
                     className={`border border-blue-900 px-2 py-2 text-center whitespace-nowrap min-w-[70px] ${
-                      d.isHoliday ? "bg-red-600" : "bg-[#1e40af]"
+                      d.isHoliday ? "bg-[#f4cccc] text-red-800" : "bg-[#1e40af]"
                     }`}
                   >
                     {d.header}
@@ -438,15 +445,15 @@ function RiwayatPage() {
                   </td>
                   {dates.map((d) => {
                     const c = getCell(p.id, d.iso, d.isHoliday);
-                    const bg = d.isHoliday ? "bg-red-500 text-white" : "";
                     return (
                       <td
                         key={d.iso}
-                        className={`border border-border/70 px-2 py-1.5 text-center whitespace-nowrap ${bg} ${
-                          !d.isHoliday ? cellTone(c.kind) : ""
+                        title={d.isHoliday ? d.holidayName ?? "Libur" : ""}
+                        className={`border border-border/70 px-2 py-1.5 text-center whitespace-nowrap ${
+                          d.isHoliday ? "bg-[#fdeaea] text-red-600 font-semibold" : cellTone(c.kind)
                         }`}
                       >
-                        {d.isHoliday && c.kind !== "hadir" && c.kind !== "terlambat" && c.kind !== "tugas_luar" ? "" : c.label}
+                        {c.label}
                       </td>
                     );
                   })}
