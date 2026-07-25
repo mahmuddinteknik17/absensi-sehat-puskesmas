@@ -180,23 +180,117 @@ function RiwayatPage() {
     return { label: "", kind: "empty" };
   }
 
-  function exportExcel() {
-    const header = ["No", "Nama Pegawai", ...dates.map((d) => d.header)];
-    const rows = filteredPegawai.map((p, idx) => {
-      const row: (string | number)[] = [idx + 1, p.nama];
-      dates.forEach((d) => row.push(getCell(p.id, d.iso, d.isHoliday).label));
-      return row;
+  function statusCode(c: Cell, isHoliday: boolean): string {
+    if (isHoliday && c.kind !== "hadir" && c.kind !== "terlambat" && c.kind !== "tugas_luar") return "L";
+    switch (c.kind) {
+      case "hadir": return "H";
+      case "terlambat": return "T";
+      case "sakit": return "S";
+      case "izin": return "I";
+      case "tugas_luar": return "TL";
+      case "cuti": return "CT";
+      case "alpha": return "A";
+      case "libur": return "L";
+      default: return "";
+    }
+  }
+
+  const CODE_COLORS: Record<string, string> = {
+    H: "FF000000",
+    T: "FFED7D31",
+    S: "FF1F4E78",
+    I: "FF7030A0",
+    TL: "FF008000",
+    CT: "FF8B4513",
+    A: "FFFF0000",
+    L: "FFFF0000",
+  };
+
+  async function exportExcel() {
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet("Rekap");
+
+    const totalCols = 2 + dates.length;
+    const lastColLetter = ws.getColumn(totalCols).letter;
+
+    // Title
+    ws.mergeCells(1, 1, 1, totalCols);
+    const titleCell = ws.getCell(1, 1);
+    titleCell.value = `REKAP DETAIL ABSENSI APEL PAGI - ${monthLabel}`;
+    titleCell.font = { bold: true, size: 16 };
+    titleCell.alignment = { horizontal: "left", vertical: "middle" };
+    ws.getRow(1).height = 24;
+
+    // Header (row 3)
+    const headerRow = ws.getRow(3);
+    headerRow.values = ["No", "Nama Pegawai", ...dates.map((d) => d.header)];
+    headerRow.height = 22;
+    headerRow.eachCell((cell, colNumber) => {
+      const isHolidayCol = colNumber >= 3 && dates[colNumber - 3]?.isHoliday;
+      cell.font = { bold: true, color: { argb: isHolidayCol ? "FF000000" : "FFFFFFFF" }, size: 11 };
+      cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: isHolidayCol ? "FFF4CCCC" : "FF1F4E78" },
+      };
+      cell.alignment = { horizontal: "center", vertical: "middle" };
+      cell.border = {
+        top: { style: "thin" }, left: { style: "thin" },
+        bottom: { style: "thin" }, right: { style: "thin" },
+      };
     });
-    const ws = XLSX.utils.aoa_to_sheet([
-      [`REKAP DETAIL ABSENSI APEL PAGI - ${monthLabel}`],
-      [],
-      header,
-      ...rows,
-    ]);
-    ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: header.length - 1 } }];
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Rekap");
-    XLSX.writeFile(wb, `Rekap-Absensi-${monthLabel.replace(" ", "-")}.xlsx`);
+
+    // Data rows
+    filteredPegawai.forEach((p, idx) => {
+      const rowIdx = 4 + idx;
+      const row = ws.getRow(rowIdx);
+      const values: (string | number)[] = [idx + 1, p.nama];
+      dates.forEach((d) => {
+        const c = getCell(p.id, d.iso, d.isHoliday);
+        values.push(statusCode(c, d.isHoliday));
+      });
+      row.values = values;
+      row.height = 18;
+
+      row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+        cell.border = {
+          top: { style: "thin" }, left: { style: "thin" },
+          bottom: { style: "thin" }, right: { style: "thin" },
+        };
+        if (colNumber === 1) {
+          cell.alignment = { horizontal: "center", vertical: "middle" };
+        } else if (colNumber === 2) {
+          cell.alignment = { horizontal: "left", vertical: "middle" };
+        } else {
+          cell.alignment = { horizontal: "center", vertical: "middle" };
+          const code = String(cell.value ?? "");
+          if (code && CODE_COLORS[code]) {
+            cell.font = { color: { argb: CODE_COLORS[code] }, bold: code === "L" || code === "A" };
+          }
+        }
+      });
+    });
+
+    // Column widths
+    ws.getColumn(1).width = 5;
+    ws.getColumn(2).width = 32;
+    for (let i = 3; i <= totalCols; i++) ws.getColumn(i).width = 7;
+
+    // Freeze header row + name column
+    ws.views = [{ state: "frozen", xSplit: 2, ySplit: 3 }];
+
+    // Autofilter
+    ws.autoFilter = { from: { row: 3, column: 1 }, to: { row: 3, column: totalCols } };
+
+    const buf = await wb.xlsx.writeBuffer();
+    const blob = new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Rekap-Absensi-${monthLabel.replace(/\s+/g, "-")}.xlsx`;
+    a.click();
+    URL.revokeObjectURL(url);
+    void lastColLetter;
   }
 
   function doPrint() {
