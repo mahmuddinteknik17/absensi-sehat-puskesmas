@@ -188,7 +188,7 @@ function RiwayatPage() {
 
 
   function statusCode(c: Cell, isHoliday: boolean): string {
-    if (isHoliday && c.kind !== "hadir" && c.kind !== "terlambat" && c.kind !== "tugas_luar") return "L";
+    if (isHoliday) return "L";
     switch (c.kind) {
       case "hadir": return "H";
       case "terlambat": return "T";
