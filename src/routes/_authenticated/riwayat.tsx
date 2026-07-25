@@ -419,7 +419,7 @@ function RiwayatPage() {
                     key={d.iso}
                     title={d.holidayName ?? ""}
                     className={`border border-blue-900 px-2 py-2 text-center whitespace-nowrap min-w-[70px] ${
-                      d.isHoliday ? "bg-red-600" : "bg-[#1e40af]"
+                      d.isHoliday ? "bg-[#f4cccc] text-red-800" : "bg-[#1e40af]"
                     }`}
                   >
                     {d.header}
