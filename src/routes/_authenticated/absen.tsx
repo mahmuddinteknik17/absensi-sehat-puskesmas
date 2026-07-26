@@ -345,6 +345,7 @@ function AbsenPage() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }
