@@ -80,10 +80,16 @@ function AbsenPage() {
     },
   });
 
+  const dow = now.getDay(); // 0=Min ... 6=Sab
+  const isApelDay = dow >= 1 && dow <= 4;
+  const isHoliday = !!holiday;
+  const closed = !isApelDay || isHoliday;
+
   useEffect(() => {
+    if (closed) return;
     fetchLocation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [closed]);
 
   async function fetchLocation() {
     setLocBusy(true);
@@ -115,11 +121,12 @@ function AbsenPage() {
     ];
   })();
 
-  const isHoliday = !!holiday;
   const alreadyAbsen = !!today_att;
 
   let blockReason: string | null = null;
-  if (isHoliday) blockReason = `Hari ini merupakan hari libur (${holiday?.nama}).`;
+  if (!isApelDay)
+    blockReason = "Absensi apel hanya dibuka pada hari Senin sampai Kamis.";
+  else if (isHoliday) blockReason = `Hari ini merupakan hari libur (${holiday?.nama}).`;
   else if (alreadyAbsen) blockReason = "Anda sudah melakukan absensi hari ini.";
   else if (!jamBukaOK) blockReason = "Absensi belum dibuka.";
   else if (!jamTutupOK) blockReason = "Absensi telah ditutup.";
@@ -201,6 +208,21 @@ function AbsenPage() {
         )}
       </div>
 
+      {closed ? (
+        <div className="rounded-2xl border border-border/50 bg-card p-6 text-center shadow-[var(--shadow-soft)]">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-destructive/10">
+            <XCircle className="h-7 w-7 text-destructive" />
+          </div>
+          <h2 className="mt-4 text-lg font-bold text-foreground">
+            {isHoliday ? "Hari Libur" : "Absensi Apel Ditutup"}
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+            {isHoliday
+              ? `Hari ini merupakan hari libur${holiday?.nama ? ` (${holiday.nama})` : ""} yang telah ditetapkan oleh Admin. Absensi apel tidak dilaksanakan.`
+              : "Hari ini tidak terdapat jadwal absensi apel. Absensi hanya dibuka pada hari Senin sampai Kamis."}
+          </p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="rounded-2xl bg-card p-5 shadow-[var(--shadow-soft)] border border-border/50">
           <div className="flex items-center justify-between">
@@ -338,6 +360,7 @@ function AbsenPage() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }
