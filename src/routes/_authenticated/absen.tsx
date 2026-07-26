@@ -80,10 +80,16 @@ function AbsenPage() {
     },
   });
 
+  const dow = now.getDay(); // 0=Min ... 6=Sab
+  const isApelDay = dow >= 1 && dow <= 4;
+  const isHoliday = !!holiday;
+  const closed = !isApelDay || isHoliday;
+
   useEffect(() => {
+    if (closed) return;
     fetchLocation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [closed]);
 
   async function fetchLocation() {
     setLocBusy(true);
