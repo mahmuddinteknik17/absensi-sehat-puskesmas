@@ -208,6 +208,21 @@ function AbsenPage() {
         )}
       </div>
 
+      {closed ? (
+        <div className="rounded-2xl border border-border/50 bg-card p-6 text-center shadow-[var(--shadow-soft)]">
+          <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-destructive/10">
+            <XCircle className="h-7 w-7 text-destructive" />
+          </div>
+          <h2 className="mt-4 text-lg font-bold text-foreground">
+            {isHoliday ? "Hari Libur" : "Absensi Apel Ditutup"}
+          </h2>
+          <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+            {isHoliday
+              ? `Hari ini merupakan hari libur${holiday?.nama ? ` (${holiday.nama})` : ""} yang telah ditetapkan oleh Admin. Absensi apel tidak dilaksanakan.`
+              : "Hari ini tidak terdapat jadwal absensi apel. Absensi hanya dibuka pada hari Senin sampai Kamis."}
+          </p>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="rounded-2xl bg-card p-5 shadow-[var(--shadow-soft)] border border-border/50">
           <div className="flex items-center justify-between">
