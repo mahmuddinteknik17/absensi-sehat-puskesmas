@@ -121,11 +121,12 @@ function AbsenPage() {
     ];
   })();
 
-  const isHoliday = !!holiday;
   const alreadyAbsen = !!today_att;
 
   let blockReason: string | null = null;
-  if (isHoliday) blockReason = `Hari ini merupakan hari libur (${holiday?.nama}).`;
+  if (!isApelDay)
+    blockReason = "Absensi apel hanya dibuka pada hari Senin sampai Kamis.";
+  else if (isHoliday) blockReason = `Hari ini merupakan hari libur (${holiday?.nama}).`;
   else if (alreadyAbsen) blockReason = "Anda sudah melakukan absensi hari ini.";
   else if (!jamBukaOK) blockReason = "Absensi belum dibuka.";
   else if (!jamTutupOK) blockReason = "Absensi telah ditutup.";
