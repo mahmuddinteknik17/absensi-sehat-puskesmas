@@ -83,6 +83,36 @@ export type Database = {
         }
         Relationships: []
       }
+      leaves: {
+        Row: {
+          created_at: string
+          id: string
+          keterangan: string | null
+          tanggal_mulai: string
+          tanggal_selesai: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          keterangan?: string | null
+          tanggal_mulai: string
+          tanggal_selesai: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          keterangan?: string | null
+          tanggal_mulai?: string
+          tanggal_selesai?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
