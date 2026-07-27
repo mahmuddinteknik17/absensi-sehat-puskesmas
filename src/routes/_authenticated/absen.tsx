@@ -80,10 +80,26 @@ function AbsenPage() {
     },
   });
 
+  const { data: leave } = useQuery({
+    queryKey: ["my-leave", user.id, today],
+    enabled: !!user.id,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("leaves")
+        .select("*")
+        .eq("user_id", user.id)
+        .lte("tanggal_mulai", today)
+        .gte("tanggal_selesai", today)
+        .maybeSingle();
+      return data;
+    },
+  });
+
   const dow = now.getDay(); // 0=Min ... 6=Sab
   const isApelDay = dow >= 1 && dow <= 4;
   const isHoliday = !!holiday;
-  const closed = !isApelDay || isHoliday;
+  const onLeave = !!leave;
+  const closed = !isApelDay || isHoliday || onLeave;
 
   useEffect(() => {
     if (closed) return;
