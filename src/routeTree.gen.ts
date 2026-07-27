@@ -16,6 +16,7 @@ import { Route as AuthenticatedRiwayatRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedPengaturanRouteImport } from './routes/_authenticated/pengaturan'
 import { Route as AuthenticatedPegawaiRouteImport } from './routes/_authenticated/pegawai'
 import { Route as AuthenticatedHariLiburRouteImport } from './routes/_authenticated/hari-libur'
+import { Route as AuthenticatedHariCutiRouteImport } from './routes/_authenticated/hari-cuti'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedAbsenRouteImport } from './routes/_authenticated/absen'
 
@@ -53,6 +54,11 @@ const AuthenticatedHariLiburRoute = AuthenticatedHariLiburRouteImport.update({
   path: '/hari-libur',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedHariCutiRoute = AuthenticatedHariCutiRouteImport.update({
+  id: '/hari-cuti',
+  path: '/hari-cuti',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/absen': typeof AuthenticatedAbsenRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/hari-cuti': typeof AuthenticatedHariCutiRoute
   '/hari-libur': typeof AuthenticatedHariLiburRoute
   '/pegawai': typeof AuthenticatedPegawaiRoute
   '/pengaturan': typeof AuthenticatedPengaturanRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/absen': typeof AuthenticatedAbsenRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/hari-cuti': typeof AuthenticatedHariCutiRoute
   '/hari-libur': typeof AuthenticatedHariLiburRoute
   '/pegawai': typeof AuthenticatedPegawaiRoute
   '/pengaturan': typeof AuthenticatedPengaturanRoute
@@ -91,6 +99,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/absen': typeof AuthenticatedAbsenRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/hari-cuti': typeof AuthenticatedHariCutiRoute
   '/_authenticated/hari-libur': typeof AuthenticatedHariLiburRoute
   '/_authenticated/pegawai': typeof AuthenticatedPegawaiRoute
   '/_authenticated/pengaturan': typeof AuthenticatedPengaturanRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/absen'
     | '/dashboard'
+    | '/hari-cuti'
     | '/hari-libur'
     | '/pegawai'
     | '/pengaturan'
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/absen'
     | '/dashboard'
+    | '/hari-cuti'
     | '/hari-libur'
     | '/pegawai'
     | '/pengaturan'
@@ -124,6 +135,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/absen'
     | '/_authenticated/dashboard'
+    | '/_authenticated/hari-cuti'
     | '/_authenticated/hari-libur'
     | '/_authenticated/pegawai'
     | '/_authenticated/pengaturan'
@@ -187,6 +199,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHariLiburRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/hari-cuti': {
+      id: '/_authenticated/hari-cuti'
+      path: '/hari-cuti'
+      fullPath: '/hari-cuti'
+      preLoaderRoute: typeof AuthenticatedHariCutiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -207,6 +226,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAbsenRoute: typeof AuthenticatedAbsenRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedHariCutiRoute: typeof AuthenticatedHariCutiRoute
   AuthenticatedHariLiburRoute: typeof AuthenticatedHariLiburRoute
   AuthenticatedPegawaiRoute: typeof AuthenticatedPegawaiRoute
   AuthenticatedPengaturanRoute: typeof AuthenticatedPengaturanRoute
@@ -216,6 +236,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAbsenRoute: AuthenticatedAbsenRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedHariCutiRoute: AuthenticatedHariCutiRoute,
   AuthenticatedHariLiburRoute: AuthenticatedHariLiburRoute,
   AuthenticatedPegawaiRoute: AuthenticatedPegawaiRoute,
   AuthenticatedPengaturanRoute: AuthenticatedPengaturanRoute,
