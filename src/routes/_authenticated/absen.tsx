@@ -80,10 +80,26 @@ function AbsenPage() {
     },
   });
 
+  const { data: leave } = useQuery({
+    queryKey: ["my-leave", user.id, today],
+    enabled: !!user.id,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("leaves")
+        .select("*")
+        .eq("user_id", user.id)
+        .lte("tanggal_mulai", today)
+        .gte("tanggal_selesai", today)
+        .maybeSingle();
+      return data;
+    },
+  });
+
   const dow = now.getDay(); // 0=Min ... 6=Sab
   const isApelDay = dow >= 1 && dow <= 4;
   const isHoliday = !!holiday;
-  const closed = !isApelDay || isHoliday;
+  const onLeave = !!leave;
+  const closed = !isApelDay || isHoliday || onLeave;
 
   useEffect(() => {
     if (closed) return;
@@ -124,7 +140,8 @@ function AbsenPage() {
   const alreadyAbsen = !!today_att;
 
   let blockReason: string | null = null;
-  if (!isApelDay)
+  if (onLeave) blockReason = "Anda sedang menjalani cuti.";
+  else if (!isApelDay)
     blockReason = "Absensi apel hanya dibuka pada hari Senin sampai Kamis.";
   else if (isHoliday) blockReason = `Hari ini merupakan hari libur (${holiday?.nama}).`;
   else if (alreadyAbsen) blockReason = "Anda sudah melakukan absensi hari ini.";
@@ -214,12 +231,14 @@ function AbsenPage() {
             <XCircle className="h-7 w-7 text-destructive" />
           </div>
           <h2 className="mt-4 text-lg font-bold text-foreground">
-            {isHoliday ? "Hari Libur" : "Absensi Apel Ditutup"}
+            {onLeave ? "Anda sedang menjalani cuti." : isHoliday ? "Hari Libur" : "Absensi Apel Ditutup"}
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-            {isHoliday
-              ? `Hari ini merupakan hari libur${holiday?.nama ? ` (${holiday.nama})` : ""} yang telah ditetapkan oleh Admin. Absensi apel tidak dilaksanakan.`
-              : "Hari ini tidak terdapat jadwal absensi apel. Absensi hanya dibuka pada hari Senin sampai Kamis."}
+            {onLeave
+              ? `Berdasarkan data cuti yang telah Anda input (${format(parseISO(leave!.tanggal_mulai), "d MMM yyyy", { locale: idLocale })} – ${format(parseISO(leave!.tanggal_selesai), "d MMM yyyy", { locale: idLocale })}), Anda tidak diwajibkan mengikuti absensi apel pada tanggal ini.`
+              : isHoliday
+                ? `Hari ini merupakan hari libur${holiday?.nama ? ` (${holiday.nama})` : ""} yang telah ditetapkan oleh Admin. Absensi apel tidak dilaksanakan.`
+                : "Hari ini tidak terdapat jadwal absensi apel. Absensi hanya dibuka pada hari Senin sampai Kamis."}
           </p>
         </div>
       ) : (

@@ -133,6 +133,20 @@ function RiwayatPage() {
     },
   });
 
+  const { data: leaves } = useQuery({
+    queryKey: ["leaves-range", from, to],
+    enabled: !!user.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("leaves")
+        .select("user_id, tanggal_mulai, tanggal_selesai")
+        .lte("tanggal_mulai", to)
+        .gte("tanggal_selesai", from);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
   const units = useMemo(() => {
     const s = new Set<string>();
     (pegawai ?? []).forEach((p) => p.unit_kerja && s.add(p.unit_kerja));
@@ -178,10 +192,17 @@ function RiwayatPage() {
     [daysInMonth, tahun, bulan, holidayMap],
   );
 
+  function onLeave(userId: string, iso: string) {
+    return (leaves ?? []).some(
+      (l) => l.user_id === userId && l.tanggal_mulai <= iso && l.tanggal_selesai >= iso,
+    );
+  }
+
   function getCell(userId: string, iso: string, isHoliday: boolean): Cell {
     if (isHoliday) return { label: "L", kind: "libur" };
     const a = attMap.get(`${userId}|${iso}`);
     if (a) return cellFromAttendance(a);
+    if (onLeave(userId, iso)) return { label: "Cuti", kind: "cuti" };
     if (iso <= today) return { label: "Alpha", kind: "alpha" };
     return { label: "", kind: "empty" };
   }
