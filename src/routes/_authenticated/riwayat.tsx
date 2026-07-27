@@ -192,10 +192,17 @@ function RiwayatPage() {
     [daysInMonth, tahun, bulan, holidayMap],
   );
 
+  function onLeave(userId: string, iso: string) {
+    return (leaves ?? []).some(
+      (l) => l.user_id === userId && l.tanggal_mulai <= iso && l.tanggal_selesai >= iso,
+    );
+  }
+
   function getCell(userId: string, iso: string, isHoliday: boolean): Cell {
     if (isHoliday) return { label: "L", kind: "libur" };
     const a = attMap.get(`${userId}|${iso}`);
     if (a) return cellFromAttendance(a);
+    if (onLeave(userId, iso)) return { label: "Cuti", kind: "cuti" };
     if (iso <= today) return { label: "Alpha", kind: "alpha" };
     return { label: "", kind: "empty" };
   }
