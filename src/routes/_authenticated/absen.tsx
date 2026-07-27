@@ -140,7 +140,8 @@ function AbsenPage() {
   const alreadyAbsen = !!today_att;
 
   let blockReason: string | null = null;
-  if (!isApelDay)
+  if (onLeave) blockReason = "Anda sedang menjalani cuti.";
+  else if (!isApelDay)
     blockReason = "Absensi apel hanya dibuka pada hari Senin sampai Kamis.";
   else if (isHoliday) blockReason = `Hari ini merupakan hari libur (${holiday?.nama}).`;
   else if (alreadyAbsen) blockReason = "Anda sudah melakukan absensi hari ini.";
