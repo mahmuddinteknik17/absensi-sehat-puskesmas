@@ -231,12 +231,14 @@ function AbsenPage() {
             <XCircle className="h-7 w-7 text-destructive" />
           </div>
           <h2 className="mt-4 text-lg font-bold text-foreground">
-            {isHoliday ? "Hari Libur" : "Absensi Apel Ditutup"}
+            {onLeave ? "Anda sedang menjalani cuti." : isHoliday ? "Hari Libur" : "Absensi Apel Ditutup"}
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-            {isHoliday
-              ? `Hari ini merupakan hari libur${holiday?.nama ? ` (${holiday.nama})` : ""} yang telah ditetapkan oleh Admin. Absensi apel tidak dilaksanakan.`
-              : "Hari ini tidak terdapat jadwal absensi apel. Absensi hanya dibuka pada hari Senin sampai Kamis."}
+            {onLeave
+              ? `Berdasarkan data cuti yang telah Anda input (${format(parseISO(leave!.tanggal_mulai), "d MMM yyyy", { locale: idLocale })} – ${format(parseISO(leave!.tanggal_selesai), "d MMM yyyy", { locale: idLocale })}), Anda tidak diwajibkan mengikuti absensi apel pada tanggal ini.`
+              : isHoliday
+                ? `Hari ini merupakan hari libur${holiday?.nama ? ` (${holiday.nama})` : ""} yang telah ditetapkan oleh Admin. Absensi apel tidak dilaksanakan.`
+                : "Hari ini tidak terdapat jadwal absensi apel. Absensi hanya dibuka pada hari Senin sampai Kamis."}
           </p>
         </div>
       ) : (
