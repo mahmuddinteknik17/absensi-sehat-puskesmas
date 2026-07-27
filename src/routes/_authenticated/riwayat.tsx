@@ -133,6 +133,20 @@ function RiwayatPage() {
     },
   });
 
+  const { data: leaves } = useQuery({
+    queryKey: ["leaves-range", from, to],
+    enabled: !!user.id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("leaves")
+        .select("user_id, tanggal_mulai, tanggal_selesai")
+        .lte("tanggal_mulai", to)
+        .gte("tanggal_selesai", from);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
   const units = useMemo(() => {
     const s = new Set<string>();
     (pegawai ?? []).forEach((p) => p.unit_kerja && s.add(p.unit_kerja));
