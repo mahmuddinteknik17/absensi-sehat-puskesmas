@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-r
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Leaf, ShieldCheck, Loader2, Eye, EyeOff } from "lucide-react";
+import { ShieldCheck, Loader2, Eye, EyeOff } from "lucide-react";
+import logoAsset from "@/assets/logo-puskesmas.png.asset.json";
 
 import { supabase } from "@/integrations/supabase/client";
 import { usernameToEmail } from "@/lib/username";
