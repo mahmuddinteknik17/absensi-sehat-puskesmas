@@ -110,15 +110,22 @@ function AbsenPage() {
   async function fetchLocation() {
     setLocBusy(true);
     setLocErr(null);
+    setLocHint(null);
     try {
       const p = await getCurrentPosition();
       setPos({ lat: p.coords.latitude, lng: p.coords.longitude, acc: p.coords.accuracy });
     } catch (e) {
       setLocErr(e instanceof Error ? e.message : "Gagal mengambil lokasi");
+      if (e instanceof GeoError && e.inIframe && (e.code === "denied" || e.code === "unavailable")) {
+        setLocHint(
+          "Anda sedang membuka aplikasi di dalam frame pratinjau. Buka aplikasi di tab browser baru agar izin lokasi dapat diberikan.",
+        );
+      }
     } finally {
       setLocBusy(false);
     }
   }
+
 
   const distance =
     pos && settings
