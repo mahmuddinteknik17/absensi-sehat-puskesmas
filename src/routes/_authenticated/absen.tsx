@@ -8,7 +8,7 @@ import { MapPin, Loader2, CheckCircle2, XCircle, RefreshCw } from "lucide-react"
 
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { haversineMeters, getCurrentPosition, deviceName, formatMeters } from "@/lib/geo";
+import { haversineMeters, getCurrentPosition, deviceName, formatMeters, GeoError } from "@/lib/geo";
 import { statusLabel } from "./dashboard";
 
 export const Route = createFileRoute("/_authenticated/absen")({
