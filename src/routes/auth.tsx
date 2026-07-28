@@ -68,8 +68,8 @@ function AuthPage() {
         style={{ background: "var(--gradient-hero)" }}
       >
         <div className="flex items-center gap-3 relative z-10">
-          <div className="grid h-11 w-11 place-items-center rounded-xl bg-white/15 backdrop-blur">
-            <Leaf className="h-6 w-6" />
+          <div className="grid h-11 w-11 place-items-center rounded-xl bg-white p-1">
+            <img src={logoAsset.url} alt="Logo UPT Puskesmas Pasar Sabtu" className="h-full w-full object-contain" />
           </div>
           <div>
             <div className="text-lg font-bold">SIPASTI</div>
