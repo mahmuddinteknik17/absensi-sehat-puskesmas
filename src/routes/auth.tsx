@@ -2,7 +2,8 @@ import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-r
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Leaf, ShieldCheck, Loader2, Eye, EyeOff } from "lucide-react";
+import { ShieldCheck, Loader2, Eye, EyeOff } from "lucide-react";
+import logoAsset from "@/assets/logo-puskesmas.png.asset.json";
 
 import { supabase } from "@/integrations/supabase/client";
 import { usernameToEmail } from "@/lib/username";
@@ -67,8 +68,8 @@ function AuthPage() {
         style={{ background: "var(--gradient-hero)" }}
       >
         <div className="flex items-center gap-3 relative z-10">
-          <div className="grid h-11 w-11 place-items-center rounded-xl bg-white/15 backdrop-blur">
-            <Leaf className="h-6 w-6" />
+          <div className="grid h-11 w-11 place-items-center rounded-xl bg-white p-1">
+            <img src={logoAsset.url} alt="Logo UPT Puskesmas Pasar Sabtu" className="h-full w-full object-contain" />
           </div>
           <div>
             <div className="text-lg font-bold">SIPASTI</div>
@@ -97,8 +98,8 @@ function AuthPage() {
       <div className="flex items-center justify-center p-6">
         <div className="w-full max-w-md">
           <div className="lg:hidden mb-8 flex items-center gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
-              <Leaf className="h-6 w-6" />
+            <div className="grid h-11 w-11 place-items-center rounded-xl bg-white p-1 shadow-[var(--shadow-soft)]">
+              <img src={logoAsset.url} alt="Logo UPT Puskesmas Pasar Sabtu" className="h-full w-full object-contain" />
             </div>
             <div>
               <div className="text-lg font-bold text-foreground">SIPASTI</div>
