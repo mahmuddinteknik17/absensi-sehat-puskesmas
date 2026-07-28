@@ -266,7 +266,24 @@ function AbsenPage() {
               {locBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             </button>
           </div>
-          {locErr && <div className="mt-3 text-sm text-destructive">{locErr}</div>}
+          {locBusy && !pos && (
+            <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" /> Mengambil lokasi GPS…
+            </div>
+          )}
+          {locErr && (
+            <div className="mt-3 rounded-xl border border-destructive/30 bg-destructive/10 p-3">
+              <div className="text-sm font-medium text-destructive">{locErr}</div>
+              {locHint && <div className="mt-1 text-xs text-muted-foreground">{locHint}</div>}
+              <button
+                onClick={fetchLocation}
+                disabled={locBusy}
+                className="mt-3 inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground disabled:opacity-50"
+              >
+                <RefreshCw className="h-3.5 w-3.5" /> Coba lagi
+              </button>
+            </div>
+          )}
           {pos && settings && (
             <div className="mt-4 space-y-2 text-sm">
               <div className="flex items-center justify-between">
