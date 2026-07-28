@@ -98,8 +98,8 @@ function AuthPage() {
       <div className="flex items-center justify-center p-6">
         <div className="w-full max-w-md">
           <div className="lg:hidden mb-8 flex items-center gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
-              <Leaf className="h-6 w-6" />
+            <div className="grid h-11 w-11 place-items-center rounded-xl bg-white p-1 shadow-[var(--shadow-soft)]">
+              <img src={logoAsset.url} alt="Logo UPT Puskesmas Pasar Sabtu" className="h-full w-full object-contain" />
             </div>
             <div>
               <div className="text-lg font-bold text-foreground">SIPASTI</div>
