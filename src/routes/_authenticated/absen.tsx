@@ -39,6 +39,7 @@ function AbsenPage() {
   const [pos, setPos] = useState<Pos>(null);
   const [locBusy, setLocBusy] = useState(false);
   const [locErr, setLocErr] = useState<string | null>(null);
+  const [locHint, setLocHint] = useState<string | null>(null);
   const [now, setNow] = useState(new Date());
   const [busy, setBusy] = useState(false);
   const [outReason, setOutReason] = useState<OutReason>("tugas_luar");
