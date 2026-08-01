@@ -25,11 +25,12 @@ export const Route = createFileRoute("/_authenticated/absen")({
 });
 
 type Pos = { lat: number; lng: number; acc: number } | null;
-type OutReason = "tugas_luar" | "sakit" | "izin";
+type OutReason = "tugas_luar" | "sakit" | "izin" | "bidan_desa";
 const REASON_OPTIONS: { value: OutReason; label: string }[] = [
   { value: "tugas_luar", label: "Tugas Luar" },
   { value: "sakit", label: "Sakit" },
   { value: "izin", label: "Izin" },
+  { value: "bidan_desa", label: "Bidan Desa" },
 ];
 
 function AbsenPage() {
