@@ -228,6 +228,7 @@ function RiwayatPage() {
       case "sakit": return "S";
       case "izin": return "I";
       case "tugas_luar": return "TL";
+      case "bidan_desa": return "BD";
       case "cuti": return "CT";
       case "alpha": return "A";
       case "libur": return "L";
@@ -241,6 +242,7 @@ function RiwayatPage() {
     S: "FF1F4E78",
     I: "FF7030A0",
     TL: "FF008000",
+    BD: "FF008080",
     CT: "FF8B4513",
     A: "FFFF0000",
     L: "FFFF0000",
