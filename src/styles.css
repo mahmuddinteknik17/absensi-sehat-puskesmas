@@ -103,3 +103,8 @@
   width: 100%;
   border-radius: var(--radius-lg);
 }
+
+/* Hide Lovable "Edit with Lovable" badge globally */
+#lovable-badge {
+  display: none !important;
+}
