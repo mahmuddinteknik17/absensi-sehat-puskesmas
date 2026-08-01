@@ -25,11 +25,12 @@ export const Route = createFileRoute("/_authenticated/absen")({
 });
 
 type Pos = { lat: number; lng: number; acc: number } | null;
-type OutReason = "tugas_luar" | "sakit" | "izin";
+type OutReason = "tugas_luar" | "sakit" | "izin" | "bidan_desa";
 const REASON_OPTIONS: { value: OutReason; label: string }[] = [
   { value: "tugas_luar", label: "Tugas Luar" },
   { value: "sakit", label: "Sakit" },
   { value: "izin", label: "Izin" },
+  { value: "bidan_desa", label: "Bidan Desa" },
 ];
 
 function AbsenPage() {
@@ -170,6 +171,9 @@ function AbsenPage() {
         } else if (outReason === "izin") {
           status = "izin";
           ket = ket ? `Izin — ${ket}` : "Izin";
+        } else if (outReason === "bidan_desa") {
+          status = isLate ? "terlambat" : "hadir";
+          ket = ket ? `Bidan Desa — ${ket}` : "Bidan Desa";
         } else {
           status = isLate ? "terlambat" : "hadir";
           ket = ket ? `Tugas Luar — ${ket}` : "Tugas Luar";
@@ -190,14 +194,17 @@ function AbsenPage() {
         keterangan: ket,
       });
       if (error) throw error;
-      const msg =
-        status === "hadir"
-          ? "✅ Absensi berhasil"
-          : status === "terlambat"
-            ? "🟡 Absensi tercatat (Terlambat)"
-            : status === "sakit"
-              ? "🩺 Absensi tercatat (Sakit)"
-              : "📝 Absensi tercatat (Izin)";
+      const msg = !inRange
+        ? outReason === "sakit"
+          ? "🩺 Absensi tercatat (Sakit)"
+          : outReason === "izin"
+            ? "📝 Absensi tercatat (Izin)"
+            : outReason === "bidan_desa"
+              ? "🏥 Absensi tercatat (Bidan Desa)"
+              : "🚗 Absensi tercatat (Tugas Luar)"
+        : status === "terlambat"
+          ? "🟡 Absensi tercatat (Terlambat)"
+          : "✅ Absensi berhasil";
       toast.success(msg);
       qc.invalidateQueries();
     } catch (e) {

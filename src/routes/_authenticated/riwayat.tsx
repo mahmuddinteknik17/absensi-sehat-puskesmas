@@ -31,20 +31,30 @@ export const Route = createFileRoute("/_authenticated/riwayat")({
 
 type Cell = {
   label: string;
-  kind: "hadir" | "terlambat" | "sakit" | "izin" | "tugas_luar" | "cuti" | "alpha" | "libur" | "empty";
+  kind:
+    | "hadir"
+    | "terlambat"
+    | "sakit"
+    | "izin"
+    | "tugas_luar"
+    | "bidan_desa"
+    | "cuti"
+    | "alpha"
+    | "libur"
+    | "empty";
 };
 
 function cellFromAttendance(a: { status: string; keterangan: string | null }): Cell {
   const ket = (a.keterangan ?? "").toLowerCase();
+  const isBidanDesa = ket.includes("bidan desa");
   const isTugasLuar = ket.includes("tugas luar");
-  if (a.status === "hadir")
-    return isTugasLuar
-      ? { label: "Tugas Luar", kind: "tugas_luar" }
-      : { label: "Hadir", kind: "hadir" };
-  if (a.status === "terlambat")
-    return isTugasLuar
-      ? { label: "Tugas Luar", kind: "tugas_luar" }
+  if (a.status === "hadir" || a.status === "terlambat") {
+    if (isBidanDesa) return { label: "Bidan Desa", kind: "bidan_desa" };
+    if (isTugasLuar) return { label: "Tugas Luar", kind: "tugas_luar" };
+    return a.status === "hadir"
+      ? { label: "Hadir", kind: "hadir" }
       : { label: "Terlambat", kind: "terlambat" };
+  }
   if (a.status === "sakit") return { label: "Sakit", kind: "sakit" };
   if (a.status === "izin")
     return ket.includes("cuti")
@@ -67,6 +77,8 @@ function cellTone(kind: Cell["kind"]): string {
       return "text-blue-700";
     case "tugas_luar":
       return "text-cyan-700";
+    case "bidan_desa":
+      return "text-teal-700";
     case "cuti":
       return "text-indigo-700";
     case "alpha":
@@ -216,6 +228,7 @@ function RiwayatPage() {
       case "sakit": return "S";
       case "izin": return "I";
       case "tugas_luar": return "TL";
+      case "bidan_desa": return "BD";
       case "cuti": return "CT";
       case "alpha": return "A";
       case "libur": return "L";
@@ -229,6 +242,7 @@ function RiwayatPage() {
     S: "FF1F4E78",
     I: "FF7030A0",
     TL: "FF008000",
+    BD: "FF008080",
     CT: "FF8B4513",
     A: "FFFF0000",
     L: "FFFF0000",
