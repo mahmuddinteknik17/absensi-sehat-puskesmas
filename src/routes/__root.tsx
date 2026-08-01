@@ -82,18 +82,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Absensi apel pegawai UPT Puskesmas Pasar Sabtu berbasis GPS. Cepat, akurat, dan mudah.",
+          "Absensi apel pegawai UPT Puskesmas Pasar Sabtu",
       },
       { name: "author", content: "UPT Puskesmas Pasar Sabtu" },
       { property: "og:title", content: "SIPASTI — Sistem Informasi Presensi Apel Terintegrasi" },
       {
         property: "og:description",
-        content: "Absensi apel pegawai UPT Puskesmas Pasar Sabtu berbasis GPS. Cepat, akurat, dan mudah.",
+        content: "Absensi apel pegawai UPT Puskesmas Pasar Sabtu",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "SIPASTI — Sistem Informasi Presensi Apel Terintegrasi" },
-      { name: "twitter:description", content: "Absensi apel pegawai UPT Puskesmas Pasar Sabtu berbasis GPS. Cepat, akurat, dan mudah." },
+      { name: "twitter:description", content: "Absensi apel pegawai UPT Puskesmas Pasar Sabtu" },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/100db1f3-cdb2-4a17-852c-391e5ac9418d/id-preview-e265f0fe--8d443cc8-1847-4d27-8772-d80f8abb3dd4.lovable.app-1785551218118.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/100db1f3-cdb2-4a17-852c-391e5ac9418d/id-preview-e265f0fe--8d443cc8-1847-4d27-8772-d80f8abb3dd4.lovable.app-1785551218118.png" },
     ],
