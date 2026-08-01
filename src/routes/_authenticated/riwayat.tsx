@@ -31,20 +31,30 @@ export const Route = createFileRoute("/_authenticated/riwayat")({
 
 type Cell = {
   label: string;
-  kind: "hadir" | "terlambat" | "sakit" | "izin" | "tugas_luar" | "cuti" | "alpha" | "libur" | "empty";
+  kind:
+    | "hadir"
+    | "terlambat"
+    | "sakit"
+    | "izin"
+    | "tugas_luar"
+    | "bidan_desa"
+    | "cuti"
+    | "alpha"
+    | "libur"
+    | "empty";
 };
 
 function cellFromAttendance(a: { status: string; keterangan: string | null }): Cell {
   const ket = (a.keterangan ?? "").toLowerCase();
+  const isBidanDesa = ket.includes("bidan desa");
   const isTugasLuar = ket.includes("tugas luar");
-  if (a.status === "hadir")
-    return isTugasLuar
-      ? { label: "Tugas Luar", kind: "tugas_luar" }
-      : { label: "Hadir", kind: "hadir" };
-  if (a.status === "terlambat")
-    return isTugasLuar
-      ? { label: "Tugas Luar", kind: "tugas_luar" }
+  if (a.status === "hadir" || a.status === "terlambat") {
+    if (isBidanDesa) return { label: "Bidan Desa", kind: "bidan_desa" };
+    if (isTugasLuar) return { label: "Tugas Luar", kind: "tugas_luar" };
+    return a.status === "hadir"
+      ? { label: "Hadir", kind: "hadir" }
       : { label: "Terlambat", kind: "terlambat" };
+  }
   if (a.status === "sakit") return { label: "Sakit", kind: "sakit" };
   if (a.status === "izin")
     return ket.includes("cuti")
