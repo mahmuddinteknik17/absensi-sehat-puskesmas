@@ -77,6 +77,8 @@ function cellTone(kind: Cell["kind"]): string {
       return "text-blue-700";
     case "tugas_luar":
       return "text-cyan-700";
+    case "bidan_desa":
+      return "text-teal-700";
     case "cuti":
       return "text-indigo-700";
     case "alpha":
