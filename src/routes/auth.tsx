@@ -209,11 +209,6 @@ function LoginForm() {
       <p className="mt-6 text-center text-xs text-muted-foreground">
         Lupa password? Hubungi administrator instansi Anda.
       </p>
-      <div className="mt-4 text-center">
-        <Link to="/auth" search={{ setup: "1" }} className="text-xs text-primary hover:underline">
-          Belum ada admin? Setup admin pertama
-        </Link>
-      </div>
     </div>
   );
 }
