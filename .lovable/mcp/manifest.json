@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://ausvwoqwlmwogovedyys.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "absensi-sehat-puskesmas",
+      "version": "0.1.0",
+      "title": "Absensi Sehat Puskesmas"
+    },
+    "tools": [
+      {
+        "name": "get_my_profile",
+        "title": "Profil saya",
+        "description": "Ambil profil pegawai (nama, NIP, jabatan, unit kerja) dari pengguna yang sedang masuk.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_attendance",
+        "title": "Riwayat absensi saya",
+        "description": "Daftar riwayat absensi apel pengguna yang sedang masuk pada rentang tanggal tertentu (format YYYY-MM-DD).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "description": "Tanggal mulai, YYYY-MM-DD"
+            },
+            "to": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+              "description": "Tanggal akhir, YYYY-MM-DD"
+            },
+            "limit": {
+              "default": 100,
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            }
+          },
+          "required": [
+            "from",
+            "to"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_holidays",
+        "title": "Hari libur",
+        "description": "Daftar hari libur yang ditetapkan admin pada rentang tanggal tertentu (YYYY-MM-DD).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "to": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            }
+          },
+          "required": [
+            "from",
+            "to"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_leaves",
+        "title": "Hari cuti saya",
+        "description": "Daftar periode cuti yang sudah dicatat oleh pengguna yang sedang masuk.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "create_leave",
+        "title": "Catat hari cuti",
+        "description": "Catat periode cuti baru untuk pengguna yang sedang masuk (tanggal format YYYY-MM-DD).",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "tanggal_mulai": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "tanggal_selesai": {
+              "type": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "keterangan": {
+              "type": "string",
+              "maxLength": 300
+            }
+          },
+          "required": [
+            "tanggal_mulai",
+            "tanggal_selesai"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

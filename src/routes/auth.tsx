@@ -15,6 +15,7 @@ const searchSchema = z.object({
 });
 
 export const Route = createFileRoute("/auth")({
+  ssr: false,
   validateSearch: (raw) => searchSchema.parse(raw),
   component: AuthPage,
   head: () => ({
