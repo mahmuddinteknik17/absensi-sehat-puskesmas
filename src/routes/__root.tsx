@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 import { Toaster } from "sonner";
@@ -35,8 +36,9 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
+  const err = error instanceof Error ? error : new Error(typeof error === "string" ? error : "Terjadi kesalahan");
   const router = useRouter();
   useEffect(() => {
     reportLovableError(error, { boundary: "tanstack_root_error_component" });
@@ -49,7 +51,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           Terjadi kesalahan
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          {error.message || "Silakan coba muat ulang halaman."}
+          {err.message || "Silakan coba muat ulang halaman."}
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
