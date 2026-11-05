@@ -151,7 +151,7 @@ function RiwayatPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("leaves")
-        .select("user_id, tanggal_mulai, tanggal_selesai")
+        .select("user_id, tanggal_mulai, tanggal_selesai, jenis")
         .lte("tanggal_mulai", to)
         .gte("tanggal_selesai", from);
       if (error) throw error;

@@ -82,26 +82,29 @@ function AbsenPage() {
     },
   });
 
-  const { data: leave } = useQuery({
+  const { data: leavesToday } = useQuery({
     queryKey: ["my-leave", user.id, today],
     enabled: !!user.id,
     queryFn: async () => {
       const { data } = await supabase
         .from("leaves")
-        .select("*")
+        .select("jenis,tanggal_mulai,tanggal_selesai")
         .eq("user_id", user.id)
         .lte("tanggal_mulai", today)
-        .gte("tanggal_selesai", today)
-        .maybeSingle();
-      return data;
+        .gte("tanggal_selesai", today);
+      return (data ?? []) as { jenis: string; tanggal_mulai: string; tanggal_selesai: string }[];
     },
   });
+
+  const cutiRow = (leavesToday ?? []).find((l) => l.jenis === "cuti");
+  const sakitRow = (leavesToday ?? []).find((l) => l.jenis === "sakit");
 
   const dow = now.getDay(); // 0=Min ... 6=Sab
   const isApelDay = dow >= 1 && dow <= 4;
   const isHoliday = !!holiday;
-  const onLeave = !!leave;
-  const closed = !isApelDay || isHoliday || onLeave;
+  const onLeave = !!cutiRow;
+  const onSakit = !!sakitRow;
+  const closed = !isApelDay || isHoliday || onLeave || onSakit;
 
   useEffect(() => {
     if (closed) return;
@@ -149,7 +152,8 @@ function AbsenPage() {
   const alreadyAbsen = !!today_att;
 
   let blockReason: string | null = null;
-  if (onLeave) blockReason = "Anda sedang menjalani cuti.";
+  if (onSakit) blockReason = "Anda sedang sakit.";
+  else if (onLeave) blockReason = "Anda sedang menjalani cuti.";
   else if (!isApelDay)
     blockReason = "Absensi apel hanya dibuka pada hari Senin sampai Kamis.";
   else if (isHoliday) blockReason = `Hari ini merupakan hari libur (${holiday?.nama}).`;
@@ -246,14 +250,22 @@ function AbsenPage() {
             <XCircle className="h-7 w-7 text-destructive" />
           </div>
           <h2 className="mt-4 text-lg font-bold text-foreground">
-            {onLeave ? "Anda sedang menjalani cuti." : isHoliday ? "Hari Libur" : "Absensi Apel Ditutup"}
+            {onSakit
+              ? "Anda sedang sakit."
+              : onLeave
+                ? "Anda sedang menjalani cuti."
+                : isHoliday
+                  ? "Hari Libur"
+                  : "Absensi Apel Ditutup"}
           </h2>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-            {onLeave
-              ? `Berdasarkan data cuti yang telah Anda input (${format(parseISO(leave!.tanggal_mulai), "d MMM yyyy", { locale: idLocale })} – ${format(parseISO(leave!.tanggal_selesai), "d MMM yyyy", { locale: idLocale })}), Anda tidak diwajibkan mengikuti absensi apel pada tanggal ini.`
-              : isHoliday
-                ? `Hari ini merupakan hari libur${holiday?.nama ? ` (${holiday.nama})` : ""} yang telah ditetapkan oleh Admin. Absensi apel tidak dilaksanakan.`
-                : "Hari ini tidak terdapat jadwal absensi apel. Absensi hanya dibuka pada hari Senin sampai Kamis."}
+            {onSakit
+              ? `Berdasarkan data hari sakit yang telah Anda input (${format(parseISO(sakitRow!.tanggal_mulai), "d MMM yyyy", { locale: idLocale })} – ${format(parseISO(sakitRow!.tanggal_selesai), "d MMM yyyy", { locale: idLocale })}), Anda tidak diwajibkan mengikuti absensi apel pada tanggal ini.`
+              : onLeave
+                ? `Berdasarkan data cuti yang telah Anda input (${format(parseISO(cutiRow!.tanggal_mulai), "d MMM yyyy", { locale: idLocale })} – ${format(parseISO(cutiRow!.tanggal_selesai), "d MMM yyyy", { locale: idLocale })}), Anda tidak diwajibkan mengikuti absensi apel pada tanggal ini.`
+                : isHoliday
+                  ? `Hari ini merupakan hari libur${holiday?.nama ? ` (${holiday.nama})` : ""} yang telah ditetapkan oleh Admin. Absensi apel tidak dilaksanakan.`
+                  : "Hari ini tidak terdapat jadwal absensi apel. Absensi hanya dibuka pada hari Senin sampai Kamis."}
           </p>
         </div>
       ) : (

@@ -16,6 +16,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRiwayatRouteImport } from './routes/_authenticated/riwayat'
 import { Route as AuthenticatedPengaturanRouteImport } from './routes/_authenticated/pengaturan'
 import { Route as AuthenticatedPegawaiRouteImport } from './routes/_authenticated/pegawai'
+import { Route as AuthenticatedHariSakitRouteImport } from './routes/_authenticated/hari-sakit'
 import { Route as AuthenticatedHariLiburRouteImport } from './routes/_authenticated/hari-libur'
 import { Route as AuthenticatedHariCutiRouteImport } from './routes/_authenticated/hari-cuti'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -57,6 +58,11 @@ const AuthenticatedPengaturanRoute = AuthenticatedPengaturanRouteImport.update({
 const AuthenticatedPegawaiRoute = AuthenticatedPegawaiRouteImport.update({
   id: '/pegawai',
   path: '/pegawai',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHariSakitRoute = AuthenticatedHariSakitRouteImport.update({
+  id: '/hari-sakit',
+  path: '/hari-sakit',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedHariLiburRoute = AuthenticatedHariLiburRouteImport.update({
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hari-cuti': typeof AuthenticatedHariCutiRoute
   '/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/hari-sakit': typeof AuthenticatedHariSakitRoute
   '/pegawai': typeof AuthenticatedPegawaiRoute
   '/pengaturan': typeof AuthenticatedPengaturanRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hari-cuti': typeof AuthenticatedHariCutiRoute
   '/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/hari-sakit': typeof AuthenticatedHariSakitRoute
   '/pegawai': typeof AuthenticatedPegawaiRoute
   '/pengaturan': typeof AuthenticatedPengaturanRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/hari-cuti': typeof AuthenticatedHariCutiRoute
   '/_authenticated/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/_authenticated/hari-sakit': typeof AuthenticatedHariSakitRoute
   '/_authenticated/pegawai': typeof AuthenticatedPegawaiRoute
   '/_authenticated/pengaturan': typeof AuthenticatedPengaturanRoute
   '/_authenticated/riwayat': typeof AuthenticatedRiwayatRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/hari-cuti'
     | '/hari-libur'
+    | '/hari-sakit'
     | '/pegawai'
     | '/pengaturan'
     | '/riwayat'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/hari-cuti'
     | '/hari-libur'
+    | '/hari-sakit'
     | '/pegawai'
     | '/pengaturan'
     | '/riwayat'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/hari-cuti'
     | '/_authenticated/hari-libur'
+    | '/_authenticated/hari-sakit'
     | '/_authenticated/pegawai'
     | '/_authenticated/pengaturan'
     | '/_authenticated/riwayat'
@@ -267,6 +279,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPegawaiRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/hari-sakit': {
+      id: '/_authenticated/hari-sakit'
+      path: '/hari-sakit'
+      fullPath: '/hari-sakit'
+      preLoaderRoute: typeof AuthenticatedHariSakitRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/hari-libur': {
       id: '/_authenticated/hari-libur'
       path: '/hari-libur'
@@ -331,6 +350,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHariCutiRoute: typeof AuthenticatedHariCutiRoute
   AuthenticatedHariLiburRoute: typeof AuthenticatedHariLiburRoute
+  AuthenticatedHariSakitRoute: typeof AuthenticatedHariSakitRoute
   AuthenticatedPegawaiRoute: typeof AuthenticatedPegawaiRoute
   AuthenticatedPengaturanRoute: typeof AuthenticatedPengaturanRoute
   AuthenticatedRiwayatRoute: typeof AuthenticatedRiwayatRoute
@@ -341,6 +361,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHariCutiRoute: AuthenticatedHariCutiRoute,
   AuthenticatedHariLiburRoute: AuthenticatedHariLiburRoute,
+  AuthenticatedHariSakitRoute: AuthenticatedHariSakitRoute,
   AuthenticatedPegawaiRoute: AuthenticatedPegawaiRoute,
   AuthenticatedPengaturanRoute: AuthenticatedPengaturanRoute,
   AuthenticatedRiwayatRoute: AuthenticatedRiwayatRoute,
