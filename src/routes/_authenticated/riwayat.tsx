@@ -206,7 +206,13 @@ function RiwayatPage() {
 
   function onLeave(userId: string, iso: string) {
     return (leaves ?? []).some(
-      (l) => l.user_id === userId && l.tanggal_mulai <= iso && l.tanggal_selesai >= iso,
+      (l) => l.jenis === "cuti" && l.user_id === userId && l.tanggal_mulai <= iso && l.tanggal_selesai >= iso,
+    );
+  }
+
+  function onSakit(userId: string, iso: string) {
+    return (leaves ?? []).some(
+      (l) => l.jenis === "sakit" && l.user_id === userId && l.tanggal_mulai <= iso && l.tanggal_selesai >= iso,
     );
   }
 
@@ -215,6 +221,7 @@ function RiwayatPage() {
     const a = attMap.get(`${userId}|${iso}`);
     if (a) return cellFromAttendance(a);
     if (onLeave(userId, iso)) return { label: "Cuti", kind: "cuti" };
+    if (onSakit(userId, iso)) return { label: "Sakit", kind: "sakit" };
     if (iso <= today) return { label: "Alpha", kind: "alpha" };
     return { label: "", kind: "empty" };
   }
