@@ -9,25 +9,30 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as McpRouteImport } from './routes/mcp'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedRiwayatRouteImport } from './routes/_authenticated/riwayat'
-import { Route as AuthenticatedPengaturanRouteImport } from './routes/_authenticated/pengaturan'
-import { Route as AuthenticatedPegawaiRouteImport } from './routes/_authenticated/pegawai'
-import { Route as AuthenticatedHariLiburRouteImport } from './routes/_authenticated/hari-libur'
-import { Route as AuthenticatedHariCutiRouteImport } from './routes/_authenticated/hari-cuti'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
-import { Route as AuthenticatedAbsenRouteImport } from './routes/_authenticated/absen'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedAbsenRouteImport } from './routes/_authenticated/absen'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedHariCutiRouteImport } from './routes/_authenticated/hari-cuti'
+import { Route as AuthenticatedHariLiburRouteImport } from './routes/_authenticated/hari-libur'
+import { Route as AuthenticatedHariSakitRouteImport } from './routes/_authenticated/hari-sakit'
+import { Route as AuthenticatedPegawaiRouteImport } from './routes/_authenticated/pegawai'
+import { Route as AuthenticatedPengaturanRouteImport } from './routes/_authenticated/pengaturan'
+import { Route as AuthenticatedRiwayatRouteImport } from './routes/_authenticated/riwayat'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -35,38 +40,26 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRiwayatRoute = AuthenticatedRiwayatRouteImport.update({
-  id: '/riwayat',
-  path: '/riwayat',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPengaturanRoute = AuthenticatedPengaturanRouteImport.update({
-  id: '/pengaturan',
-  path: '/pengaturan',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedPegawaiRoute = AuthenticatedPegawaiRouteImport.update({
-  id: '/pegawai',
-  path: '/pegawai',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedHariLiburRoute = AuthenticatedHariLiburRouteImport.update({
-  id: '/hari-libur',
-  path: '/hari-libur',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const AuthenticatedHariCutiRoute = AuthenticatedHariCutiRouteImport.update({
-  id: '/hari-cuti',
-  path: '/hari-cuti',
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedAbsenRoute = AuthenticatedAbsenRouteImport.update({
+  id: '/absen',
+  path: '/absen',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
@@ -74,34 +67,47 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedAbsenRoute = AuthenticatedAbsenRouteImport.update({
-  id: '/absen',
-  path: '/absen',
+const AuthenticatedHariCutiRoute = AuthenticatedHariCutiRouteImport.update({
+  id: '/hari-cuti',
+  path: '/hari-cuti',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const AuthenticatedHariLiburRoute = AuthenticatedHariLiburRouteImport.update({
+  id: '/hari-libur',
+  path: '/hari-libur',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHariSakitRoute = AuthenticatedHariSakitRouteImport.update({
+  id: '/hari-sakit',
+  path: '/hari-sakit',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPegawaiRoute = AuthenticatedPegawaiRouteImport.update({
+  id: '/pegawai',
+  path: '/pegawai',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPengaturanRoute = AuthenticatedPengaturanRouteImport.update({
+  id: '/pengaturan',
+  path: '/pengaturan',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedRiwayatRoute = AuthenticatedRiwayatRouteImport.update({
+  id: '/riwayat',
+  path: '/riwayat',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const Char91DotmcpChar93InvokeToolToolRoute =
   Char91DotmcpChar93InvokeToolToolRouteImport.update({
     id: '/.mcp/invoke-tool/$tool',
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hari-cuti': typeof AuthenticatedHariCutiRoute
   '/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/hari-sakit': typeof AuthenticatedHariSakitRoute
   '/pegawai': typeof AuthenticatedPegawaiRoute
   '/pengaturan': typeof AuthenticatedPengaturanRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/hari-cuti': typeof AuthenticatedHariCutiRoute
   '/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/hari-sakit': typeof AuthenticatedHariSakitRoute
   '/pegawai': typeof AuthenticatedPegawaiRoute
   '/pengaturan': typeof AuthenticatedPengaturanRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/hari-cuti': typeof AuthenticatedHariCutiRoute
   '/_authenticated/hari-libur': typeof AuthenticatedHariLiburRoute
+  '/_authenticated/hari-sakit': typeof AuthenticatedHariSakitRoute
   '/_authenticated/pegawai': typeof AuthenticatedPegawaiRoute
   '/_authenticated/pengaturan': typeof AuthenticatedPengaturanRoute
   '/_authenticated/riwayat': typeof AuthenticatedRiwayatRoute
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/hari-cuti'
     | '/hari-libur'
+    | '/hari-sakit'
     | '/pegawai'
     | '/pengaturan'
     | '/riwayat'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/hari-cuti'
     | '/hari-libur'
+    | '/hari-sakit'
     | '/pegawai'
     | '/pengaturan'
     | '/riwayat'
@@ -198,6 +209,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/hari-cuti'
     | '/_authenticated/hari-libur'
+    | '/_authenticated/hari-sakit'
     | '/_authenticated/pegawai'
     | '/_authenticated/pengaturan'
     | '/_authenticated/riwayat'
@@ -218,18 +230,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -239,67 +244,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/riwayat': {
-      id: '/_authenticated/riwayat'
-      path: '/riwayat'
-      fullPath: '/riwayat'
-      preLoaderRoute: typeof AuthenticatedRiwayatRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pengaturan': {
-      id: '/_authenticated/pengaturan'
-      path: '/pengaturan'
-      fullPath: '/pengaturan'
-      preLoaderRoute: typeof AuthenticatedPengaturanRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/pegawai': {
-      id: '/_authenticated/pegawai'
-      path: '/pegawai'
-      fullPath: '/pegawai'
-      preLoaderRoute: typeof AuthenticatedPegawaiRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/hari-libur': {
-      id: '/_authenticated/hari-libur'
-      path: '/hari-libur'
-      fullPath: '/hari-libur'
-      preLoaderRoute: typeof AuthenticatedHariLiburRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/hari-cuti': {
-      id: '/_authenticated/hari-cuti'
-      path: '/hari-cuti'
-      fullPath: '/hari-cuti'
-      preLoaderRoute: typeof AuthenticatedHariCutiRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/absen': {
-      id: '/_authenticated/absen'
-      path: '/absen'
-      fullPath: '/absen'
-      preLoaderRoute: typeof AuthenticatedAbsenRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/.mcp/list-tools': {
@@ -309,18 +265,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.mcp/invoke-tool/$tool': {
-      id: '/.mcp/invoke-tool/$tool'
-      path: '/.mcp/invoke-tool/$tool'
-      fullPath: '/.mcp/invoke-tool/$tool'
-      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/absen': {
+      id: '/_authenticated/absen'
+      path: '/absen'
+      fullPath: '/absen'
+      preLoaderRoute: typeof AuthenticatedAbsenRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hari-cuti': {
+      id: '/_authenticated/hari-cuti'
+      path: '/hari-cuti'
+      fullPath: '/hari-cuti'
+      preLoaderRoute: typeof AuthenticatedHariCutiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hari-libur': {
+      id: '/_authenticated/hari-libur'
+      path: '/hari-libur'
+      fullPath: '/hari-libur'
+      preLoaderRoute: typeof AuthenticatedHariLiburRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/hari-sakit': {
+      id: '/_authenticated/hari-sakit'
+      path: '/hari-sakit'
+      fullPath: '/hari-sakit'
+      preLoaderRoute: typeof AuthenticatedHariSakitRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pegawai': {
+      id: '/_authenticated/pegawai'
+      path: '/pegawai'
+      fullPath: '/pegawai'
+      preLoaderRoute: typeof AuthenticatedPegawaiRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pengaturan': {
+      id: '/_authenticated/pengaturan'
+      path: '/pengaturan'
+      fullPath: '/pengaturan'
+      preLoaderRoute: typeof AuthenticatedPengaturanRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/riwayat': {
+      id: '/_authenticated/riwayat'
+      path: '/riwayat'
+      fullPath: '/riwayat'
+      preLoaderRoute: typeof AuthenticatedRiwayatRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/.lovable/oauth/consent': {
       id: '/.lovable/oauth/consent'
       path: '/.lovable/oauth/consent'
       fullPath: '/.lovable/oauth/consent'
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -331,6 +350,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedHariCutiRoute: typeof AuthenticatedHariCutiRoute
   AuthenticatedHariLiburRoute: typeof AuthenticatedHariLiburRoute
+  AuthenticatedHariSakitRoute: typeof AuthenticatedHariSakitRoute
   AuthenticatedPegawaiRoute: typeof AuthenticatedPegawaiRoute
   AuthenticatedPengaturanRoute: typeof AuthenticatedPengaturanRoute
   AuthenticatedRiwayatRoute: typeof AuthenticatedRiwayatRoute
@@ -341,6 +361,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedHariCutiRoute: AuthenticatedHariCutiRoute,
   AuthenticatedHariLiburRoute: AuthenticatedHariLiburRoute,
+  AuthenticatedHariSakitRoute: AuthenticatedHariSakitRoute,
   AuthenticatedPegawaiRoute: AuthenticatedPegawaiRoute,
   AuthenticatedPengaturanRoute: AuthenticatedPengaturanRoute,
   AuthenticatedRiwayatRoute: AuthenticatedRiwayatRoute,
