@@ -52,6 +52,7 @@ function HariCutiPage() {
       let q = supabase
         .from("leaves")
         .select("id,user_id,tanggal_mulai,tanggal_selesai,keterangan")
+        .eq("jenis", "cuti")
         .order("tanggal_mulai", { ascending: false });
       if (!isAdmin) q = q.eq("user_id", user.id);
       const { data, error } = await q;
@@ -206,6 +207,7 @@ function LeaveForm({ userId, onClose }: { userId: string; onClose: () => void })
     mutationFn: async () => {
       const { error } = await supabase.from("leaves").insert({
         user_id: userId,
+        jenis: "cuti",
         tanggal_mulai: mulai,
         tanggal_selesai: selesai,
         keterangan: keterangan.trim() || null,
