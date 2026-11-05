@@ -87,6 +87,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          jenis: string
           keterangan: string | null
           tanggal_mulai: string
           tanggal_selesai: string
@@ -96,6 +97,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          jenis?: string
           keterangan?: string | null
           tanggal_mulai: string
           tanggal_selesai: string
@@ -105,6 +107,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          jenis?: string
           keterangan?: string | null
           tanggal_mulai?: string
           tanggal_selesai?: string
