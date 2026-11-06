@@ -1,3 +1,3 @@
 - [x] Add Hari Sakit menu and capture periods in Lovable Cloud.
 - [x] Integrate sick periods into attendance blocking and monthly recap.
-- [ ] Verify the workflow in preview with the admin account.
+- [ ] Verify the workflow in preview with the admin account — blocked because preview sign-in approval was declined.
