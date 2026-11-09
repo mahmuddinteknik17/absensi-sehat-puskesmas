@@ -1,3 +1,5 @@
 - [x] Add Hari Sakit menu and capture periods in Lovable Cloud.
 - [x] Integrate sick periods into attendance blocking and monthly recap.
 - [x] Leave end-to-end verification to the user after their offer to test the feature.
+- [x] Add an admin-managed current apel schedule photo and show it on all employee dashboards.
+- [x] Replace the employee dashboard's recent attendance list with the schedule photo.
