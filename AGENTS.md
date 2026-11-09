@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Store the current apel schedule as one authenticated-readable record pointing to a private storage image; restrict upload and replacement to admins so all signed-in employees see the same current schedule.
