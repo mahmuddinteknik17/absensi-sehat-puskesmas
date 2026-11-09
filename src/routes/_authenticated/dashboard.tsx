@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { format, parseISO, startOfMonth } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
 import {
@@ -8,7 +9,6 @@ import {
   Clock,
   UserX,
   CalendarDays,
-  MapPin,
   TrendingUp,
   ImagePlus,
   Loader2,
@@ -17,6 +17,7 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   BarChart,
   Bar,
@@ -340,21 +341,23 @@ function ApelScheduleSection({ canManage = false }: { canManage?: boolean }) {
           )}
         </div>
         {canManage && (
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:brightness-105">
-            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
-            {uploading ? "Mengunggah…" : schedule ? "Ganti Foto" : "Tambah Foto"}
-            <input
-              key={inputKey}
-              type="file"
-              accept="image/*"
-              disabled={uploading}
-              className="sr-only"
-              onChange={(event) => {
-                const file = event.currentTarget.files?.[0];
-                if (file) void uploadSchedule(file);
-              }}
-            />
-          </label>
+          <Button asChild disabled={uploading}>
+            <label className="cursor-pointer">
+              {uploading ? <Loader2 className="animate-spin" /> : <ImagePlus />}
+              {uploading ? "Mengunggah…" : schedule ? "Ganti Foto" : "Tambah Foto"}
+              <input
+                key={inputKey}
+                type="file"
+                accept="image/*"
+                disabled={uploading}
+                className="sr-only"
+                onChange={(event) => {
+                  const file = event.currentTarget.files?.[0];
+                  if (file) void uploadSchedule(file);
+                }}
+              />
+            </label>
+          </Button>
         )}
       </div>
       <div className="p-4 sm:p-5">
