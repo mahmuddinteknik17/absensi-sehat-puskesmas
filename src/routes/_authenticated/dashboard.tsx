@@ -263,6 +263,7 @@ function ApelScheduleSection({ canManage = false }: { canManage?: boolean }) {
   const queryClient = useQueryClient();
   const { data: schedule, isLoading, isError } = useQuery({
     queryKey: ["apel-schedule"],
+    refetchInterval: 60_000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("apel_schedule")
