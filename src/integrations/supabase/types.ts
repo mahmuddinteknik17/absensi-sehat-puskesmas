@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      apel_schedule: {
+        Row: {
+          file_name: string
+          id: number
+          image_path: string
+          updated_at: string
+          updated_by: string
+        }
+        Insert: {
+          file_name: string
+          id?: number
+          image_path: string
+          updated_at?: string
+          updated_by: string
+        }
+        Update: {
+          file_name?: string
+          id?: number
+          image_path?: string
+          updated_at?: string
+          updated_by?: string
+        }
+        Relationships: []
+      }
       attendance: {
         Row: {
           akurasi: number | null
