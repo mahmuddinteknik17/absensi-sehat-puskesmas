@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { format, parseISO, startOfMonth } from "date-fns";
 import { id as idLocale } from "date-fns/locale";
 import {
@@ -32,8 +32,12 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardPage,
   head: () => ({
     meta: [
-      { title: "Dashboard — SIPASTI" },
-      { name: "description", content: "Ringkasan kehadiran apel pegawai." },
+      { title: "Dashboard Absensi Apel — SIPASTI UPT Puskesmas Pasar Sabtu" },
+      { name: "description", content: "Dashboard SIPASTI untuk memantau kehadiran dan jadwal petugas apel UPT Puskesmas Pasar Sabtu." },
+      { property: "og:title", content: "Dashboard Absensi Apel — SIPASTI" },
+      { property: "og:description", content: "Ringkasan kehadiran dan jadwal petugas apel UPT Puskesmas Pasar Sabtu." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
 });
@@ -276,7 +280,7 @@ function ApelScheduleSection({ canManage = false }: { canManage?: boolean }) {
   });
 
   const [uploading, setUploading] = useState(false);
-  const [inputKey, setInputKey] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   async function uploadSchedule(file: File) {
     if (!file.type.startsWith("image/")) {
@@ -327,7 +331,7 @@ function ApelScheduleSection({ canManage = false }: { canManage?: boolean }) {
       toast.error(error instanceof Error ? error.message : "Gagal mengunggah foto jadwal.");
     } finally {
       setUploading(false);
-      setInputKey((key) => key + 1);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   }
 
@@ -341,23 +345,23 @@ function ApelScheduleSection({ canManage = false }: { canManage?: boolean }) {
           )}
         </div>
         {canManage && (
-          <Button asChild disabled={uploading}>
-            <label className="cursor-pointer">
+          <>
+            <Button type="button" disabled={uploading} onClick={() => fileInputRef.current?.click()}>
               {uploading ? <Loader2 className="animate-spin" /> : <ImagePlus />}
               {uploading ? "Mengunggah…" : schedule ? "Ganti Foto" : "Tambah Foto"}
-              <input
-                key={inputKey}
-                type="file"
-                accept="image/*"
-                disabled={uploading}
-                className="sr-only"
-                onChange={(event) => {
-                  const file = event.currentTarget.files?.[0];
-                  if (file) void uploadSchedule(file);
-                }}
-              />
-            </label>
-          </Button>
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              disabled={uploading}
+              className="sr-only"
+              onChange={(event) => {
+                const file = event.currentTarget.files?.[0];
+                if (file) void uploadSchedule(file);
+              }}
+            />
+          </>
         )}
       </div>
       <div className="p-4 sm:p-5">
