@@ -10,10 +10,13 @@ import {
   CalendarDays,
   MapPin,
   TrendingUp,
+  ImagePlus,
+  Loader2,
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { toast } from "sonner";
 import {
   BarChart,
   Bar,
@@ -178,6 +181,7 @@ function AdminDashboard() {
           </ResponsiveContainer>
         </div>
       </div>
+      <ApelScheduleSection canManage />
     </div>
   );
 }
@@ -197,20 +201,6 @@ function PegawaiDashboard() {
         .eq("tanggal", today)
         .maybeSingle();
       return data;
-    },
-  });
-
-  const { data: recent } = useQuery({
-    queryKey: ["me-recent", user.id],
-    enabled: !!user.id,
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("attendance")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("tanggal", { ascending: false })
-        .limit(5);
-      return data ?? [];
     },
   });
 
@@ -258,37 +248,139 @@ function PegawaiDashboard() {
         </div>
       </div>
 
-      <div className="rounded-2xl bg-card p-5 shadow-[var(--shadow-soft)] border border-border/50">
-        <div className="mb-4 flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-primary" />
-          <h2 className="text-base font-bold text-foreground">Riwayat Terakhir</h2>
-        </div>
-        {(!recent || recent.length === 0) && (
-          <div className="text-sm text-muted-foreground">Belum ada riwayat absensi.</div>
-        )}
-        <ul className="divide-y divide-border/60">
-          {recent?.map((r) => {
-            const s = statusLabel(r.status);
-            return (
-              <li key={r.id} className="flex items-center justify-between py-3">
-                <div>
-                  <div className="text-sm font-semibold text-foreground">
-                    {format(parseISO(r.tanggal), "EEEE, d MMM yyyy", { locale: idLocale })}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {format(parseISO(r.jam), "HH:mm")} ·{" "}
-                    {r.jarak_meter != null ? `${Math.round(r.jarak_meter)} m` : "—"}
-                  </div>
-                </div>
-                <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${s.tone}`}>
-                  {s.label}
-                </span>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <ApelScheduleSection />
     </div>
+  );
+}
+
+function ApelScheduleSection({ canManage = false }: { canManage?: boolean }) {
+  const user = useCurrentUser();
+  const queryClient = useQueryClient();
+  const { data: schedule, isLoading, isError } = useQuery({
+    queryKey: ["apel-schedule"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("apel_schedule")
+        .select("id, image_path, file_name, updated_at")
+        .eq("id", 1)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return null;
+      const { data: signedImage, error: signedError } = await supabase.storage
+        .from("jadwal-apel")
+        .createSignedUrl(data.image_path, 60 * 60);
+      if (signedError) throw signedError;
+      return { ...data, signedUrl: signedImage.signedUrl };
+    },
+  });
+
+  const [uploading, setUploading] = useState(false);
+  const [inputKey, setInputKey] = useState(0);
+
+  async function uploadSchedule(file: File) {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Pilih file gambar untuk jadwal apel.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Ukuran foto maksimal 10 MB.");
+      return;
+    }
+    if (!user.id) {
+      toast.error("Sesi pengguna tidak ditemukan. Silakan masuk kembali.");
+      return;
+    }
+
+    setUploading(true);
+    const path = `current/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+    try {
+      const { error: uploadError } = await supabase.storage.from("jadwal-apel").upload(path, file, {
+        contentType: file.type,
+        cacheControl: "3600",
+        upsert: false,
+      });
+      if (uploadError) throw uploadError;
+
+      const { error: saveError } = await supabase.from("apel_schedule").upsert(
+        {
+          id: 1,
+          image_path: path,
+          file_name: file.name,
+          updated_by: user.id,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "id" },
+      );
+      if (saveError) {
+        await supabase.storage.from("jadwal-apel").remove([path]);
+        throw saveError;
+      }
+
+      const oldPath = schedule?.image_path;
+      if (oldPath && oldPath !== path) {
+        await supabase.storage.from("jadwal-apel").remove([oldPath]);
+      }
+      await queryClient.invalidateQueries({ queryKey: ["apel-schedule"] });
+      toast.success("Foto jadwal petugas apel berhasil diperbarui.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Gagal mengunggah foto jadwal.");
+    } finally {
+      setUploading(false);
+      setInputKey((key) => key + 1);
+    }
+  }
+
+  return (
+    <section className="overflow-hidden rounded-2xl border border-border/50 bg-card shadow-[var(--shadow-soft)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/60 px-5 py-4">
+        <div>
+          <h2 className="text-base font-bold text-foreground">Jadwal Petugas Apel</h2>
+          {canManage && (
+            <p className="mt-1 text-sm text-muted-foreground">Foto ini akan terlihat di dashboard semua pegawai.</p>
+          )}
+        </div>
+        {canManage && (
+          <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:brightness-105">
+            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImagePlus className="h-4 w-4" />}
+            {uploading ? "Mengunggah…" : schedule ? "Ganti Foto" : "Tambah Foto"}
+            <input
+              key={inputKey}
+              type="file"
+              accept="image/*"
+              disabled={uploading}
+              className="sr-only"
+              onChange={(event) => {
+                const file = event.currentTarget.files?.[0];
+                if (file) void uploadSchedule(file);
+              }}
+            />
+          </label>
+        )}
+      </div>
+      <div className="p-4 sm:p-5">
+        {isLoading ? (
+          <div className="grid min-h-48 place-items-center text-primary">
+            <Loader2 className="h-7 w-7 animate-spin" />
+          </div>
+        ) : isError ? (
+          <p className="py-10 text-center text-sm text-destructive">Foto jadwal belum dapat dimuat. Silakan muat ulang halaman.</p>
+        ) : schedule ? (
+          <img
+            src={schedule.signedUrl}
+            alt={`Jadwal petugas apel: ${schedule.file_name}`}
+            className="mx-auto max-h-[72vh] w-full rounded-lg bg-muted object-contain object-top"
+          />
+        ) : (
+          <div className="grid min-h-48 place-items-center rounded-lg border border-dashed border-border bg-muted/30 px-5 text-center">
+            <div>
+              <ImagePlus className="mx-auto mb-3 h-8 w-8 text-muted-foreground" />
+              <p className="font-semibold text-foreground">Jadwal petugas apel belum tersedia</p>
+              {canManage && <p className="mt-1 text-sm text-muted-foreground">Tambahkan foto jadwal agar tampil di dashboard pegawai.</p>}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
 
