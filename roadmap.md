@@ -3,3 +3,4 @@
 - [x] Leave end-to-end verification to the user after their offer to test the feature.
 - [x] Add an admin-managed current apel schedule photo and show it on all employee dashboards.
 - [x] Replace the employee dashboard's recent attendance list with the schedule photo.
+- [ ] Add a Tugas Luar menu for recording periods and show Tugas Luar / TL in the attendance recap and Excel export.
