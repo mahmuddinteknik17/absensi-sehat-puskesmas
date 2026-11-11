@@ -15,6 +15,13 @@
       "when": 1794184653026,
       "tag": "0001_create_apel_schedule",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794368438566,
+      "tag": "0002_allow_tugas_luar_periods",
+      "breakpoints": true
     }
   ]
 }

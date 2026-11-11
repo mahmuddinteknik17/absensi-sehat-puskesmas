@@ -11,6 +11,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { hasPeriodOnDate, getRecapStatusCode } from "@/lib/attendance-recap";
 
 const searchSchema = z.object({
   bulan: fallback(z.number().int(), new Date().getMonth() + 1).default(new Date().getMonth() + 1),
@@ -216,12 +217,17 @@ function RiwayatPage() {
     );
   }
 
+  function onTugasLuar(userId: string, iso: string) {
+    return hasPeriodOnDate(leaves ?? [], userId, iso, "tugas_luar");
+  }
+
   function getCell(userId: string, iso: string, isHoliday: boolean): Cell {
     if (isHoliday) return { label: "L", kind: "libur" };
     const a = attMap.get(`${userId}|${iso}`);
     if (a) return cellFromAttendance(a);
     if (onLeave(userId, iso)) return { label: "Cuti", kind: "cuti" };
     if (onSakit(userId, iso)) return { label: "Sakit", kind: "sakit" };
+    if (onTugasLuar(userId, iso)) return { label: "Tugas Luar", kind: "tugas_luar" };
     if (iso <= today) return { label: "Alpha", kind: "alpha" };
     return { label: "", kind: "empty" };
   }
@@ -229,18 +235,7 @@ function RiwayatPage() {
 
   function statusCode(c: Cell, isHoliday: boolean): string {
     if (isHoliday) return "L";
-    switch (c.kind) {
-      case "hadir": return "H";
-      case "terlambat": return "T";
-      case "sakit": return "S";
-      case "izin": return "I";
-      case "tugas_luar": return "TL";
-      case "bidan_desa": return "BD";
-      case "cuti": return "CT";
-      case "alpha": return "A";
-      case "libur": return "L";
-      default: return "";
-    }
+    return getRecapStatusCode(c.kind);
   }
 
   const CODE_COLORS: Record<string, string> = {

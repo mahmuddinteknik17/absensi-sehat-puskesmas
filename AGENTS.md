@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Store the current apel schedule as one authenticated-readable record pointing to a private storage image; restrict upload and replacement to admins so all signed-in employees see the same current schedule.
+- Store employee-owned absence and offsite-duty date ranges in the existing leaves table with distinct jenis values, reusing its self-scoped access rules instead of parallel period tables.
