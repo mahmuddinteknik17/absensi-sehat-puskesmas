@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_authenticated/tugas-luar")({
       {
         name: "description",
         content:
-          "Catat Tugas Luar pegawai agar sistem absensi apel mengetahui pegawai tidak wajib absen.",
+          "Catat periode Tugas Luar pegawai dan tampilkan keterangannya pada rekap absensi apel.",
       },
       { property: "og:title", content: "Tugas Luar — SIPASTI" },
       {
@@ -104,8 +104,8 @@ function TugasLuarPage() {
           <h1 className="text-2xl font-extrabold text-foreground">Tugas Luar</h1>
           <p className="text-sm text-muted-foreground">
             {isAdmin
-              ? "Referensi data sakit seluruh pegawai. Pegawai yang tercatat sakit tidak diwajibkan absen apel."
-              : "Catat Tugas Luar Anda agar tidak diwajibkan absen apel pada tanggal tersebut."}
+              ? "Referensi periode Tugas Luar seluruh pegawai yang tercatat pada rekap absensi."
+              : "Catat periode tugas di luar kantor agar keterangannya muncul pada rekap absensi."}
           </p>
         </div>
         <button

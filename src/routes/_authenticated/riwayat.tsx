@@ -11,7 +11,7 @@ import { zodValidator, fallback } from "@tanstack/zod-adapter";
 
 import { supabase } from "@/integrations/supabase/client";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
-import { getPeriodRecapType, getRecapStatusCode } from "@/lib/attendance-recap";
+import { hasPeriodOnDate, getRecapStatusCode } from "@/lib/attendance-recap";
 
 const searchSchema = z.object({
   bulan: fallback(z.number().int(), new Date().getMonth() + 1).default(new Date().getMonth() + 1),
@@ -218,7 +218,7 @@ function RiwayatPage() {
   }
 
   function onTugasLuar(userId: string, iso: string) {
-    return getPeriodRecapType(leaves ?? [], userId, iso) === "tugas_luar";
+    return hasPeriodOnDate(leaves ?? [], userId, iso, "tugas_luar");
   }
 
   function getCell(userId: string, iso: string, isHoliday: boolean): Cell {

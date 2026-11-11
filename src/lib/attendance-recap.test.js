@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { getPeriodRecapType, getRecapStatusCode } from "./attendance-recap";
+import { hasPeriodOnDate, getRecapStatusCode } from "./attendance-recap";
 
 describe("Tugas Luar attendance recap", () => {
   it("recognizes each date inside a recorded Tugas Luar period", () => {
@@ -12,8 +12,9 @@ describe("Tugas Luar attendance recap", () => {
       },
     ];
 
-    expect(getPeriodRecapType(periods, "pegawai-1", "2026-11-10")).toBe("tugas_luar");
-    expect(getPeriodRecapType(periods, "pegawai-1", "2026-11-13")).toBeNull();
+    expect(hasPeriodOnDate(periods, "pegawai-1", "2026-11-10", "tugas_luar")).toBe(true);
+    expect(hasPeriodOnDate(periods, "pegawai-1", "2026-11-13", "tugas_luar")).toBe(false);
+    expect(hasPeriodOnDate(periods, "pegawai-2", "2026-11-10", "tugas_luar")).toBe(false);
   });
 
   it("exports Tugas Luar with the TL status code", () => {

@@ -17,22 +17,19 @@ export type LeavePeriod = {
   jenis: string;
 };
 
-export function getPeriodRecapType(
+export function hasPeriodOnDate(
   periods: readonly LeavePeriod[],
   userId: string,
   isoDate: string,
-): "cuti" | "sakit" | "tugas_luar" | null {
-  const period = periods.find(
+  jenis: "cuti" | "sakit" | "tugas_luar",
+): boolean {
+  return periods.some(
     (item) =>
       item.user_id === userId &&
       item.tanggal_mulai <= isoDate &&
       item.tanggal_selesai >= isoDate &&
-      (item.jenis === "cuti" || item.jenis === "sakit" || item.jenis === "tugas_luar"),
+      item.jenis === jenis,
   );
-
-  return period?.jenis === "cuti" || period?.jenis === "sakit" || period?.jenis === "tugas_luar"
-    ? period.jenis
-    : null;
 }
 
 export function getRecapStatusCode(kind: RecapCellKind): string {
