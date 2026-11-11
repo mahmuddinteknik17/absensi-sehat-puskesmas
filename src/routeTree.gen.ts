@@ -23,6 +23,7 @@ import { Route as AuthenticatedHariSakitRouteImport } from './routes/_authentica
 import { Route as AuthenticatedPegawaiRouteImport } from './routes/_authenticated/pegawai'
 import { Route as AuthenticatedPengaturanRouteImport } from './routes/_authenticated/pengaturan'
 import { Route as AuthenticatedRiwayatRouteImport } from './routes/_authenticated/riwayat'
+import { Route as AuthenticatedTugasLuarRouteImport } from './routes/_authenticated/tugas-luar'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 
@@ -97,6 +98,11 @@ const AuthenticatedRiwayatRoute = AuthenticatedRiwayatRouteImport.update({
   path: '/riwayat',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTugasLuarRoute = AuthenticatedTugasLuarRouteImport.update({
+  id: '/tugas-luar',
+  path: '/tugas-luar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   id: '/.lovable/oauth/consent',
   path: '/.lovable/oauth/consent',
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/pegawai': typeof AuthenticatedPegawaiRoute
   '/pengaturan': typeof AuthenticatedPengaturanRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
+  '/tugas-luar': typeof AuthenticatedTugasLuarRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/pegawai': typeof AuthenticatedPegawaiRoute
   '/pengaturan': typeof AuthenticatedPengaturanRoute
   '/riwayat': typeof AuthenticatedRiwayatRoute
+  '/tugas-luar': typeof AuthenticatedTugasLuarRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/_authenticated/pegawai': typeof AuthenticatedPegawaiRoute
   '/_authenticated/pengaturan': typeof AuthenticatedPengaturanRoute
   '/_authenticated/riwayat': typeof AuthenticatedRiwayatRoute
+  '/_authenticated/tugas-luar': typeof AuthenticatedTugasLuarRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
 }
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
     | '/pegawai'
     | '/pengaturan'
     | '/riwayat'
+    | '/tugas-luar'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesByTo: FileRoutesByTo
@@ -195,6 +205,7 @@ export interface FileRouteTypes {
     | '/pegawai'
     | '/pengaturan'
     | '/riwayat'
+    | '/tugas-luar'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   id:
@@ -213,6 +224,7 @@ export interface FileRouteTypes {
     | '/_authenticated/pegawai'
     | '/_authenticated/pengaturan'
     | '/_authenticated/riwayat'
+    | '/_authenticated/tugas-luar'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
   fileRoutesById: FileRoutesById
@@ -328,6 +340,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRiwayatRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/tugas-luar': {
+      id: '/_authenticated/tugas-luar'
+      path: '/tugas-luar'
+      fullPath: '/tugas-luar'
+      preLoaderRoute: typeof AuthenticatedTugasLuarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/.lovable/oauth/consent': {
       id: '/.lovable/oauth/consent'
       path: '/.lovable/oauth/consent'
@@ -354,6 +373,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPegawaiRoute: typeof AuthenticatedPegawaiRoute
   AuthenticatedPengaturanRoute: typeof AuthenticatedPengaturanRoute
   AuthenticatedRiwayatRoute: typeof AuthenticatedRiwayatRoute
+  AuthenticatedTugasLuarRoute: typeof AuthenticatedTugasLuarRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -365,6 +385,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPegawaiRoute: AuthenticatedPegawaiRoute,
   AuthenticatedPengaturanRoute: AuthenticatedPengaturanRoute,
   AuthenticatedRiwayatRoute: AuthenticatedRiwayatRoute,
+  AuthenticatedTugasLuarRoute: AuthenticatedTugasLuarRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
